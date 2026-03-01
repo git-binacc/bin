@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title class="glyphicon">bin » info</title>
-<link rel="icon" type="image/x-icon" href="/Users/seethamounika/Desktop/favicon.png">
+<title>BIN » info</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=Crimson+Pro:ital,wght@1,300;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
 <style>
+  /* ========================
+     CSS VARIABLES
+  ======================== */
   :root {
     --bg: #030712;
     --bg2: #060e1e;
@@ -19,9 +20,17 @@
     --text: #e2e8f0;
     --muted: #64748b;
     --glow: 0 0 40px rgba(0, 212, 255, 0.15);
+
+    /* Responsive spacing tokens */
+    --section-pad-y: 5rem;
+    --section-pad-x: 2rem;
+    --hero-pad: 4rem 2rem;
+    --max-width: 1100px;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
 
   body {
     background: var(--bg);
@@ -31,7 +40,9 @@
     min-height: 100vh;
   }
 
-  /* Star canvas */
+  /* ========================
+     STAR CANVAS
+  ======================== */
   #stars {
     position: fixed;
     top: 0; left: 0;
@@ -45,7 +56,101 @@
     z-index: 1;
   }
 
-  /* ---- HERO ---- */
+  /* ========================
+     NAV (responsive)
+  ======================== */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 2.5rem;
+    background: rgba(3, 7, 18, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0, 212, 255, 0.06);
+  }
+
+  .nav-brand {
+    font-family: 'Space Mono', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  /* Mobile hamburger */
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+    background: none;
+    border: none;
+  }
+
+  .nav-toggle span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--accent);
+    transition: all 0.3s ease;
+    border-radius: 2px;
+  }
+
+  .nav-mobile {
+    display: none;
+    position: fixed;
+    top: 57px; left: 0; right: 0;
+    background: rgba(3, 7, 18, 0.97);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+    z-index: 99;
+    padding: 1.5rem 2rem;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .nav-mobile.open { display: flex; }
+
+  .nav-mobile a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: color 0.3s;
+  }
+
+  .nav-mobile a:hover { color: var(--accent); }
+
+  /* ========================
+     HERO
+  ======================== */
   .hero {
     min-height: 100vh;
     display: flex;
@@ -53,7 +158,8 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 4rem 2rem;
+    padding: var(--hero-pad);
+    padding-top: 6rem;
     position: relative;
   }
 
@@ -88,10 +194,10 @@
   .hero-title {
     font-family: 'Syne', sans-serif;
     font-weight: 800;
-    font-size: clamp(2.8rem, 7vw, 6rem);
+    font-size: clamp(3rem, 8vw, 6.5rem);
     line-height: 1.05;
     letter-spacing: -0.02em;
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
     opacity: 0;
     animation: fadeUp 0.8s ease 0.4s forwards;
   }
@@ -106,11 +212,11 @@
   .hero-sub {
     font-family: 'Crimson Pro', serif;
     font-style: italic;
-    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-size: clamp(1.05rem, 2.2vw, 1.45rem);
     color: var(--muted);
-    max-width: 600px;
-    line-height: 1.7;
-    margin-bottom: 3rem;
+    max-width: 580px;
+    line-height: 1.75;
+    margin-bottom: 2.5rem;
     opacity: 0;
     animation: fadeUp 0.8s ease 0.6s forwards;
   }
@@ -131,7 +237,7 @@
 
   .btn {
     font-family: 'Space Mono', monospace;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     letter-spacing: 0.1em;
     padding: 0.85rem 2rem;
     border-radius: 2px;
@@ -139,6 +245,7 @@
     cursor: pointer;
     text-decoration: none;
     transition: all 0.3s ease;
+    display: inline-block;
   }
 
   .btn-primary {
@@ -169,10 +276,12 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* ---- AXIOMS ---- */
+  /* ========================
+     SECTION BASE
+  ======================== */
   .section {
-    padding: 5rem 2rem;
-    max-width: 1100px;
+    padding: var(--section-pad-y) var(--section-pad-x);
+    max-width: var(--max-width);
     margin: 0 auto;
   }
 
@@ -187,6 +296,7 @@
     align-items: center;
     gap: 1rem;
   }
+
   .section-label::after {
     content: '';
     flex: 1;
@@ -194,6 +304,9 @@
     background: linear-gradient(to right, var(--accent2), transparent);
   }
 
+  /* ========================
+     AXIOMS GRID
+  ======================== */
   .axioms-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -234,7 +347,7 @@
   .axiom blockquote {
     font-family: 'Crimson Pro', serif;
     font-style: italic;
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     line-height: 1.65;
     color: var(--text);
     font-weight: 300;
@@ -246,12 +359,14 @@
     font-weight: 400;
   }
 
-  /* ---- EQUATION STACK ---- */
+  /* ========================
+     EQUATION STACK
+  ======================== */
   .equation-stack {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    padding: 4rem 0;
+    padding: 2rem 0;
   }
 
   .eq-line {
@@ -277,23 +392,29 @@
     content: '';
     position: absolute;
     right: 0; top: 0; bottom: 0;
-    width: 200px;
+    width: 120px;
     background: linear-gradient(to left, var(--bg) 0%, transparent 100%);
   }
 
   .eq-arrow {
     font-family: 'Space Mono', monospace;
     color: var(--accent3);
-    font-size: 1.2rem;
+    font-size: 1rem;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .eq-divider {
+    color: rgba(255,255,255,0.2);
     flex-shrink: 0;
   }
 
   .eq-text {
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    font-size: 1.1rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
     color: var(--text);
     line-height: 1.6;
-    font-weight: 300;
+    font-weight: 400;
   }
 
   .eq-text strong {
@@ -303,14 +424,12 @@
     font-family: 'Space Mono', monospace;
     font-size: 0.85em;
   }
-  blockquote strong{
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    fonr-size: 1em;
-  }
 
-  /* ---- STACK TAGS ---- */
+  /* ========================
+     STACK TAGS
+  ======================== */
   .topics {
-    padding: 5rem 2rem;
+    padding: var(--section-pad-y) var(--section-pad-x);
     background: var(--surface);
     position: relative;
   }
@@ -324,7 +443,7 @@
   }
 
   .topics-inner {
-    max-width: 1100px;
+    max-width: var(--max-width);
     margin: 0 auto;
   }
 
@@ -342,9 +461,10 @@
     padding: 0.6rem 1.2rem;
     border-radius: 2px;
     transition: all 0.3s ease;
-    cursor: pointer
+    cursor: pointer;
   }
-  .tag-soon{
+
+  .tag-soon {
     font-family: 'Space Mono', monospace;
     font-size: 0.7rem;
     letter-spacing: 0.1em;
@@ -352,21 +472,23 @@
     border-radius: 2px;
     transition: all 0.3s ease;
     cursor: not-allowed;
-    background-color: rgb(211, 211, 211, 0.08);
-    border: 1px solid rgba(169, 169, 169,0.25);
+    background-color: rgba(211, 211, 211, 0.08);
+    border: 1px solid rgba(169, 169, 169, 0.25);
     color: rgb(200, 200, 200);
   }
 
   .tag:nth-child(3n+1) { background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.25); color: var(--accent); }
   .tag:nth-child(3n+2) { background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.25); color: #a78bfa; }
   .tag:nth-child(3n+3) { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); color: var(--accent3); }
-
   .tag:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
-  /* ---- PHILOSOPHY BLOCKS ---- */
+
+  /* ========================
+     PHILOSOPHY
+  ======================== */
   .philosophy {
-    max-width: 1100px;
+    max-width: var(--max-width);
     margin: 0 auto;
-    padding: 5rem 2rem;
+    padding: var(--section-pad-y) var(--section-pad-x);
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 3rem;
@@ -381,9 +503,7 @@
     margin-bottom: 1.5rem;
   }
 
-  .phil-text h2 span {
-    color: var(--accent2);
-  }
+  .phil-text h2 span { color: var(--accent2); }
 
   .phil-text p {
     font-family: 'Crimson Pro', serif;
@@ -398,11 +518,12 @@
     border: 1px solid rgba(0,212,255,0.1);
     padding: 2rem;
     font-family: 'Space Mono', monospace;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     line-height: 2;
     color: #94a3b8;
     position: relative;
     overflow: hidden;
+    border-radius: 2px;
   }
 
   .code-block::before {
@@ -420,7 +541,9 @@
   .code-block .cm { color: var(--muted); font-style: italic; }
   .code-block .num { color: #f472b6; }
 
-  /* ---- MANTRA ---- */
+  /* ========================
+     MANTRA
+  ======================== */
   .mantra {
     padding: 6rem 2rem;
     text-align: center;
@@ -450,19 +573,22 @@
     animation: spin 20s linear infinite reverse;
   }
 
-  @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+  @keyframes spin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
 
   .mantra-words {
     display: flex;
     justify-content: center;
-    gap: 3rem;
+    align-items: center;
+    gap: 2.5rem;
     flex-wrap: wrap;
     position: relative;
     z-index: 1;
   }
 
   .mantra-word {
-    font-size: clamp(1.4rem, 4vw, 3rem);
+    font-size: clamp(1.6rem, 4vw, 3rem);
     font-weight: 800;
     letter-spacing: -0.01em;
     position: relative;
@@ -481,18 +607,21 @@
   }
 
   .mantra-word:nth-child(1) { color: var(--accent); }
-  .mantra-word:nth-child(2) { color: #a78bfa; }
-  .mantra-word:nth-child(3) { color: var(--accent3); }
-  .mantra-word:nth-child(4) { color: #34d399; }
+  .mantra-word:nth-child(3) { color: #a78bfa; }
+  .mantra-word:nth-child(5) { color: var(--accent3); }
+  .mantra-word:nth-child(7) { color: #34d399; }
 
   .separator {
     align-self: center;
     color: rgba(255,255,255,0.1);
     font-size: 1.5rem;
     line-height: 1;
+    padding-bottom: 1.2rem;
   }
 
-  /* ---- FOOTER ---- */
+  /* ========================
+     FOOTER
+  ======================== */
   footer {
     border-top: 1px solid rgba(255,255,255,0.05);
     padding: 3rem 2rem;
@@ -515,16 +644,196 @@
     letter-spacing: 0.15em;
   }
 
-  @media (max-width: 768px) {
+  /* ========================
+     SCROLL INDICATOR
+  ======================== */
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 1.2s forwards;
+  }
+
+  .scroll-hint span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .scroll-dot {
+    width: 4px;
+    height: 4px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: bounce 1.5s ease infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(6px); opacity: 0.4; }
+  }
+
+  /* ========================
+     TABLET: 768px – 1023px
+  ======================== */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    :root {
+      --section-pad-y: 4rem;
+      --section-pad-x: 2.5rem;
+      --hero-pad: 3rem 2.5rem;
+    }
+
+    /* Nav */
+    .nav { padding: 1rem 2rem; }
+
+    /* Hero */
+    .hero::before { width: 500px; height: 500px; }
+    .hero-sub { max-width: 500px; }
+
+    /* Axioms: 2-col on tablet */
+    .axioms-grid { grid-template-columns: 1fr 1fr; }
+    .axiom { padding: 2rem; }
+    .axiom blockquote { font-size: 1.1rem; }
+
+    /* Philosophy: stack on tablet */
+    .philosophy {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .code-block { font-size: 0.72rem; }
+
+    /* Eq line compact */
+    .eq-line { gap: 1.2rem; padding: 1.2rem 2rem; }
+
+    /* Mantra */
+    .mantra { padding: 4rem 2rem; }
+    .mantra::before { width: 380px; height: 380px; }
+    .mantra::after { width: 270px; height: 270px; }
+    .mantra-words { gap: 2rem; }
+    .separator { font-size: 1.2rem; }
+  }
+
+  /* ========================
+     MOBILE: < 768px
+  ======================== */
+  @media (max-width: 767px) {
+    :root {
+      --section-pad-y: 3.5rem;
+      --section-pad-x: 1.25rem;
+      --hero-pad: 2rem 1.25rem;
+    }
+
+    /* Nav */
+    .nav { padding: 1rem 1.25rem; }
+    .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+
+    /* Hero */
+    .hero { padding-top: 5rem; padding-bottom: 4rem; }
+    .hero::before { width: 320px; height: 320px; }
+    .hero-sub { font-size: 1rem; max-width: 100%; }
+    .cta-bar { gap: 0.75rem; }
+    .btn { padding: 0.75rem 1.5rem; font-size: 0.68rem; }
+
+    /* Section label */
+    .section-label { font-size: 0.6rem; letter-spacing: 0.25em; }
+
+    /* Axioms: 1-col on mobile */
     .axioms-grid { grid-template-columns: 1fr; }
-    .philosophy { grid-template-columns: 1fr; }
-    .mantra-words { gap: 1.5rem; }
+    .axiom { padding: 1.75rem 1.5rem; }
+    .axiom blockquote { font-size: 1.05rem; }
+
+    /* Equation stack */
+    .eq-line {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1.25rem 1.5rem;
+    }
+    .eq-line::after { display: none; }
+    .eq-divider { display: none; }
+    .eq-arrow { font-size: 0.75rem; }
+    .eq-text { font-size: 0.95rem; }
+
+    /* Topics */
+    .topics { padding: var(--section-pad-y) var(--section-pad-x); }
+    .tags-wrap { gap: 0.6rem; margin-top: 2rem; }
+    .tag, .tag-soon { font-size: 0.62rem; padding: 0.5rem 1rem; }
+
+    /* Philosophy: stack */
+    .philosophy {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding: var(--section-pad-y) var(--section-pad-x);
+    }
+    .code-block { font-size: 0.68rem; padding: 1.5rem; overflow-x: auto; }
+    .code-block br { display: block; }
+
+    /* Mantra */
+    .mantra { padding: 3.5rem 1.25rem; }
+    .mantra::before { width: 260px; height: 260px; }
+    .mantra::after { width: 180px; height: 180px; }
+    .mantra-words { gap: 1.25rem; }
+    .separator { font-size: 1rem; }
+
+    /* Scroll hint: hide on mobile */
+    .scroll-hint { display: none; }
+
+    /* Footer */
+    footer { padding: 2rem 1.25rem; }
+  }
+
+  /* ========================
+     LAPTOP: 1024px+
+  ======================== */
+  @media (min-width: 1024px) {
+    :root {
+      --section-pad-y: 5.5rem;
+      --section-pad-x: 2rem;
+    }
+    .axioms-grid { grid-template-columns: 1fr 1fr; }
+    .philosophy { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Extra large: 1440px+ */
+  @media (min-width: 1440px) {
+    :root { --max-width: 1280px; }
+    .hero-title { font-size: 7rem; }
   }
 </style>
 </head>
 <body>
 <canvas id="stars"></canvas>
 <div class="page">
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="#" class="nav-brand">BIN</a>
+    <ul class="nav-links">
+      <li><a href="#explore">What's New</a></li>
+      <li><a href="#stack">My Stack</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- MOBILE NAV MENU -->
+  <div class="nav-mobile" id="navMobile">
+    <a href="#explore" onclick="closeMobileNav()">What's New</a>
+    <a href="#stack" onclick="closeMobileNav()">My Stack</a>
+  </div>
 
   <!-- HERO -->
   <section class="hero">
@@ -533,10 +842,16 @@
       B<span class="gradient">i</span>N
     </h1>
     <p class="hero-sub">
-      I’m a student and here I share what I learn and explore in <em>AI</em> <br> — All stuff about AI is available in BIN<br>
-      <br>
+      I'm a student and here I share what I learn and explore in <em>AI</em><br>
+      — All stuff about AI is available in BIN
+    </p>
+    <div class="cta-bar">
       <a href="#explore" class="btn btn-primary">What's NEW!</a>
       <a href="#stack" class="btn btn-outline">My Stack →</a>
+    </div>
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-dot"></div>
     </div>
   </section>
 
@@ -567,33 +882,36 @@
       <div class="axiom">
         <div class="axiom-num">AXIOM 06</div>
         <blockquote>
-          <span class="eq-arrow">f(x) → </span>
-          Mathematics learns <strong>PATTERNS</strong> in data — executed by computers — inspired by human brains.</blockquote>
+          <span style="color:var(--accent3); font-style:normal;">f(x) → </span>
+          Mathematics learns <strong>PATTERNS</strong> in data — executed by computers — inspired by human brains.
+        </blockquote>
       </div>
       <div class="axiom">
         <div class="axiom-num">AXIOM 07</div>
         <blockquote>
-          <span class="eq-arrow">∴ </span>
-          <strong>PROGRAMMING</strong> is Mathematics — translated into instructions a computer can execute</blockquote>
+          <span style="color:var(--accent3); font-style:normal;">∴ </span>
+          <strong>PROGRAMMING</strong> is Mathematics — translated into instructions a computer can execute.
+        </blockquote>
       </div>
       <div class="axiom">
         <div class="axiom-num">AXIOM 08</div>
         <blockquote>
-          <span class="eq-arrow">∂ </span>
-          True learning comes from understanding the <strong>LOGIC</strong> behind concepts — not just memorizing syntax</blockquote>
+          <span style="color:var(--accent3); font-style:normal;">∂ </span>
+          True learning comes from understanding the <strong>LOGIC</strong> behind concepts — not just memorizing syntax.
+        </blockquote>
       </div>
     </div>
   </section>
 
-  <!-- EQUATION STACK -->
+  <!-- EQUATION STACK / WHAT'S NEW -->
   <section class="section" id="explore">
     <div class="section-label">The Stack Equation</div>
     <div class="equation-stack">
       <div class="eq-line">
         <span class="eq-arrow">1 Mar 2026</span>
-        <span style="color:lightgrey">|</span>
+        <span class="eq-divider">|</span>
         <div class="eq-text">
-          Welcome, Today is the 1<sup>st</sup> day where I'm created this page with the help of <strong>Claude-AI</strong>
+          Welcome — Today is the 1<sup>st</sup> day where I created this page with the help of <strong>Claude-AI</strong>
         </div>
       </div>
     </div>
@@ -628,22 +946,21 @@
   <section class="philosophy">
     <div class="phil-text">
       <h2>Code as <span>Thought</span> Manifest</h2>
-      <p>&nbsp;</p>
-      <p>&nbsp;</p>
+      <p>Where mathematics formalizes intuition, code gives it motion. Every function is a thought made executable.</p>
     </div>
     <div class="code-block">
       <span class="cm"># The Universe's function signature</span><br>
       <span class="kw">def</span> <span class="fn">universe</span>(math: <span class="str">'blueprint'</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;code: <span class="str">'construction'</span>,<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;logic: <span class="str">'foundation'</span>) → <span class="str">'science'</span>:<br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># Physics + Math = Universal Law</span><br>
-&nbsp;&nbsp;&nbsp;&nbsp;intuition = math.formalize(physics)<br>
-&nbsp;&nbsp;&nbsp;&nbsp;law = intuition.generalize(<span class="num">∞</span>)<br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> law.execute(universe)<br>
-<br>
-<span class="cm"># Learn | Think | Build | Evolve</span>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;code: <span class="str">'construction'</span>,<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;logic: <span class="str">'foundation'</span>) → <span class="str">'science'</span>:<br>
+      <br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># Physics + Math = Universal Law</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;intuition = math.formalize(physics)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;law = intuition.generalize(<span class="num">∞</span>)<br>
+      <br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> law.execute(universe)<br>
+      <br>
+      <span class="cm"># Learn | Think | Build | Evolve</span>
     </div>
   </section>
 
@@ -669,58 +986,76 @@
 </div>
 
 <script>
-// ---- STAR FIELD ----
-const canvas = document.getElementById('stars');
-const ctx = canvas.getContext('2d');
-let stars = [];
+  /* ---- STAR FIELD ---- */
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
 
-function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-
-function createStars(n = 180) {
-  stars = [];
-  for (let i = 0; i < n; i++) {
-    stars.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 1.2 + 0.2,
-      o: Math.random() * 0.6 + 0.1,
-      speed: Math.random() * 0.015 + 0.005,
-      phase: Math.random() * Math.PI * 2
-    });
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
   }
-}
 
-function drawStars(t) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  stars.forEach(s => {
-    const opacity = s.o * (0.6 + 0.4 * Math.sin(t * s.speed + s.phase));
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(200,220,255,${opacity})`;
-    ctx.fill();
-  });
+  function createStars(n = 180) {
+    stars = [];
+    for (let i = 0; i < n; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.2 + 0.2,
+        o: Math.random() * 0.6 + 0.1,
+        speed: Math.random() * 0.015 + 0.005,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  function drawStars(t) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      const opacity = s.o * (0.6 + 0.4 * Math.sin(t * s.speed + s.phase));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200,220,255,${opacity})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(drawStars);
+  }
+
+  resize();
+  createStars();
+  window.addEventListener('resize', () => { resize(); createStars(); });
   requestAnimationFrame(drawStars);
-}
 
-resize();
-createStars();
-window.addEventListener('resize', () => { resize(); createStars(); });
-requestAnimationFrame(drawStars);
+  /* ---- SCROLL ANIMATIONS ---- */
+  const eqLines = document.querySelectorAll('.eq-line');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 150);
+      }
+    });
+  }, { threshold: 0.2 });
+  eqLines.forEach(el => obs.observe(el));
 
-// ---- SCROLL ANIMATIONS ----
-const eqLines = document.querySelectorAll('.eq-line');
-const obs = new IntersectionObserver(entries => {
-  entries.forEach((e, i) => {
-    if (e.isIntersecting) {
-      setTimeout(() => e.target.classList.add('visible'), i * 150);
+  /* ---- MOBILE NAV ---- */
+  const toggle = document.getElementById('navToggle');
+  const mobileNav = document.getElementById('navMobile');
+
+  toggle.addEventListener('click', () => {
+    mobileNav.classList.toggle('open');
+  });
+
+  function closeMobileNav() {
+    mobileNav.classList.remove('open');
+  }
+
+  /* Close when clicking outside */
+  document.addEventListener('click', (e) => {
+    if (!toggle.contains(e.target) && !mobileNav.contains(e.target)) {
+      mobileNav.classList.remove('open');
     }
   });
-}, { threshold: 0.2 });
-
-eqLines.forEach(el => obs.observe(el));
 </script>
 </body>
 </html>
