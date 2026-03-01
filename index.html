@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title class="glyphicon">bin » info</title>
+<link rel="icon" type="image/x-icon" href="/Users/seethamounika/Desktop/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=Crimson+Pro:ital,wght@1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: #030712;
+    --bg2: #060e1e;
+    --surface: #0a1628;
+    --surface2: #0f1f3a;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --accent3: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --glow: 0 0 40px rgba(0, 212, 255, 0.15);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* Star canvas */
+  #stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ---- HERO ---- */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, rgba(0,212,255,0.06) 40%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: pulse 6s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+    50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+  }
+
+  .eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.8rem, 7vw, 6rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.4s forwards;
+  }
+
+  .hero-title span.gradient {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    color: var(--muted);
+    max-width: 600px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.6s forwards;
+  }
+
+  .hero-sub em {
+    color: var(--accent3);
+    font-style: normal;
+  }
+
+  .cta-bar {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.8s forwards;
+  }
+
+  .btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    padding: 0.85rem 2rem;
+    border-radius: 2px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: 700;
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 0 30px rgba(0,212,255,0.5);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid rgba(0,212,255,0.4);
+  }
+
+  .btn-outline:hover {
+    background: rgba(0,212,255,0.08);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---- AXIOMS ---- */
+  .section {
+    padding: 5rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    color: var(--accent2);
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--accent2), transparent);
+  }
+
+  .axioms-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5px;
+    background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(124,58,237,0.1));
+    border: 1px solid rgba(0,212,255,0.1);
+  }
+
+  .axiom {
+    background: var(--bg);
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+
+  .axiom::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 0;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2));
+    transition: height 0.4s ease;
+  }
+
+  .axiom:hover::before { height: 100%; }
+  .axiom:hover { background: var(--surface); }
+
+  .axiom-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    margin-bottom: 1rem;
+  }
+
+  .axiom blockquote {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 1.25rem;
+    line-height: 1.65;
+    color: var(--text);
+    font-weight: 300;
+  }
+
+  .axiom blockquote strong {
+    color: var(--accent);
+    font-style: normal;
+    font-weight: 400;
+  }
+
+  /* ---- EQUATION STACK ---- */
+  .equation-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 4rem 0;
+  }
+
+  .eq-line {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.5rem 2.5rem;
+    border: 1px solid rgba(255,255,255,0.04);
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.5s ease;
+  }
+
+  .eq-line.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .eq-line::after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 200px;
+    background: linear-gradient(to left, var(--bg) 0%, transparent 100%);
+  }
+
+  .eq-arrow {
+    font-family: 'Space Mono', monospace;
+    color: var(--accent3);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .eq-text {
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 1.1rem;
+    color: var(--text);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .eq-text strong {
+    color: var(--accent);
+    font-style: normal;
+    font-weight: 700;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85em;
+  }
+  blockquote strong{
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    fonr-size: 1em;
+  }
+
+  /* ---- STACK TAGS ---- */
+  .topics {
+    padding: 5rem 2rem;
+    background: var(--surface);
+    position: relative;
+  }
+
+  .topics::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--accent2), var(--accent), transparent);
+  }
+
+  .topics-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .tags-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.5rem;
+  }
+
+  .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    padding: 0.6rem 1.2rem;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    cursor: pointer
+  }
+  .tag-soon{
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    padding: 0.6rem 1.2rem;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    cursor: not-allowed;
+    background-color: rgb(211, 211, 211, 0.08);
+    border: 1px solid rgba(169, 169, 169,0.25);
+    color: rgb(200, 200, 200);
+  }
+
+  .tag:nth-child(3n+1) { background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.25); color: var(--accent); }
+  .tag:nth-child(3n+2) { background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.25); color: #a78bfa; }
+  .tag:nth-child(3n+3) { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); color: var(--accent3); }
+
+  .tag:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+  /* ---- PHILOSOPHY BLOCKS ---- */
+  .philosophy {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .phil-text h2 {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+
+  .phil-text h2 span {
+    color: var(--accent2);
+  }
+
+  .phil-text p {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+  }
+
+  .code-block {
+    background: var(--surface2);
+    border: 1px solid rgba(0,212,255,0.1);
+    padding: 2rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 2;
+    color: #94a3b8;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .code-block::before {
+    content: '● ● ●';
+    display: block;
+    color: var(--muted);
+    font-size: 0.6rem;
+    margin-bottom: 1.2rem;
+    letter-spacing: 0.3em;
+  }
+
+  .code-block .kw { color: var(--accent2); }
+  .code-block .fn { color: var(--accent); }
+  .code-block .str { color: var(--accent3); }
+  .code-block .cm { color: var(--muted); font-style: italic; }
+  .code-block .num { color: #f472b6; }
+
+  /* ---- MANTRA ---- */
+  .mantra {
+    padding: 6rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mantra::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,212,255,0.05);
+    animation: spin 30s linear infinite;
+  }
+
+  .mantra::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 350px; height: 350px;
+    border-radius: 50%;
+    border: 1px dashed rgba(124,58,237,0.08);
+    animation: spin 20s linear infinite reverse;
+  }
+
+  @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+  .mantra-words {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+
+  .mantra-word {
+    font-size: clamp(1.4rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    position: relative;
+  }
+
+  .mantra-word::after {
+    content: attr(data-label);
+    display: block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    font-weight: 400;
+    margin-top: 0.4rem;
+    text-transform: uppercase;
+  }
+
+  .mantra-word:nth-child(1) { color: var(--accent); }
+  .mantra-word:nth-child(2) { color: #a78bfa; }
+  .mantra-word:nth-child(3) { color: var(--accent3); }
+  .mantra-word:nth-child(4) { color: #34d399; }
+
+  .separator {
+    align-self: center;
+    color: rgba(255,255,255,0.1);
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+
+  /* ---- FOOTER ---- */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  .footer-brand {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(0,212,255,0.4);
+    letter-spacing: 0.15em;
+  }
+
+  @media (max-width: 768px) {
+    .axioms-grid { grid-template-columns: 1fr; }
+    .philosophy { grid-template-columns: 1fr; }
+    .mantra-words { gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div class="page">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="eyebrow">Welcome to</div>
+    <h1 class="hero-title">
+      B<span class="gradient">i</span>N
+    </h1>
+    <p class="hero-sub">
+      I’m a student and here I share what I learn and explore in <em>AI</em> <br> — All stuff about AI is available in BIN<br>
+      <br>
+      <a href="#explore" class="btn btn-primary">What's NEW!</a>
+      <a href="#stack" class="btn btn-outline">My Stack →</a>
+    </div>
+  </section>
+
+  <!-- AXIOMS -->
+  <section class="section">
+    <div class="section-label">Core Axioms</div>
+    <div class="axioms-grid">
+      <div class="axiom">
+        <div class="axiom-num">AXIOM 01</div>
+        <blockquote>If you want to describe the Universe with <strong>Logic</strong> — understand the Universe with <strong>Math</strong>.</blockquote>
+      </div>
+      <div class="axiom">
+        <div class="axiom-num">AXIOM 02</div>
+        <blockquote>A mathematical equation means the same thing to every intelligent being, anywhere in the <strong>universe</strong>.</blockquote>
+      </div>
+      <div class="axiom">
+        <div class="axiom-num">AXIOM 03</div>
+        <blockquote><strong>Physics</strong> would be Philosophy — with Mathematics, Physics becomes <strong>Science</strong>.</blockquote>
+      </div>
+      <div class="axiom">
+        <div class="axiom-num">AXIOM 04</div>
+        <blockquote>Mathematics turns physical intuition into <strong>Universal Laws</strong>.</blockquote>
+      </div>
+      <div class="axiom">
+        <div class="axiom-num">AXIOM 05</div>
+        <blockquote>Mathematics is the <strong>blueprint</strong>, programming language is the construction tool, the program is the <strong>building</strong>.</blockquote>
+      </div>
+      <div class="axiom">
+        <div class="axiom-num">AXIOM 06</div>
+        <blockquote>
+          <span class="eq-arrow">f(x) → </span>
+          Mathematics learns <strong>PATTERNS</strong> in data — executed by computers — inspired by human brains.</blockquote>
+      </div>
+      <div class="axiom">
+        <div class="axiom-num">AXIOM 07</div>
+        <blockquote>
+          <span class="eq-arrow">∴ </span>
+          <strong>PROGRAMMING</strong> is Mathematics — translated into instructions a computer can execute</blockquote>
+      </div>
+      <div class="axiom">
+        <div class="axiom-num">AXIOM 08</div>
+        <blockquote>
+          <span class="eq-arrow">∂ </span>
+          True learning comes from understanding the <strong>LOGIC</strong> behind concepts — not just memorizing syntax</blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- EQUATION STACK -->
+  <section class="section" id="explore">
+    <div class="section-label">The Stack Equation</div>
+    <div class="equation-stack">
+      <div class="eq-line">
+        <span class="eq-arrow">1 Mar 2026</span>
+        <span style="color:lightgrey">|</span>
+        <div class="eq-text">
+          Welcome, Today is the 1<sup>st</sup> day where I'm created this page with the help of <strong>Claude-AI</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOPICS / STACK -->
+  <div class="topics" id="stack">
+    <div class="topics-inner">
+      <div class="section-label">My Exploration Stack</div>
+      <div class="tags-wrap">
+        <span class="tag">SQL</span>
+        <span class="tag-soon">Python</span>
+        <span class="tag-soon">Data Science</span>
+        <span class="tag-soon">Machine Learning</span>
+        <span class="tag-soon">Deep Learning</span>
+        <span class="tag-soon">Generative AI</span>
+        <span class="tag-soon">Physical AI</span>
+        <span class="tag-soon">Conscious AI</span>
+        <span class="tag-soon">Neural Networks</span>
+        <span class="tag-soon">Linear Algebra</span>
+        <span class="tag-soon">Calculus</span>
+        <span class="tag-soon">Statistics</span>
+        <span class="tag-soon">Transformer Models</span>
+        <span class="tag-soon">Computer Vision</span>
+        <span class="tag-soon">NLP</span>
+        <span class="tag-soon">Reinforcement Learning</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHILOSOPHY -->
+  <section class="philosophy">
+    <div class="phil-text">
+      <h2>Code as <span>Thought</span> Manifest</h2>
+      <p>&nbsp;</p>
+      <p>&nbsp;</p>
+    </div>
+    <div class="code-block">
+      <span class="cm"># The Universe's function signature</span><br>
+      <span class="kw">def</span> <span class="fn">universe</span>(math: <span class="str">'blueprint'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;code: <span class="str">'construction'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;logic: <span class="str">'foundation'</span>) → <span class="str">'science'</span>:<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># Physics + Math = Universal Law</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;intuition = math.formalize(physics)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;law = intuition.generalize(<span class="num">∞</span>)<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> law.execute(universe)<br>
+<br>
+<span class="cm"># Learn | Think | Build | Evolve</span>
+    </div>
+  </section>
+
+  <!-- MANTRA -->
+  <section class="mantra">
+    <div class="mantra-words">
+      <div class="mantra-word" data-label="absorb">Learn</div>
+      <div class="separator">|</div>
+      <div class="mantra-word" data-label="question">Think</div>
+      <div class="separator">|</div>
+      <div class="mantra-word" data-label="create">Build</div>
+      <div class="separator">|</div>
+      <div class="mantra-word" data-label="iterate">Evolve</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">Language of the Universe</div>
+    <div class="footer-tag">Follow for bite-sized AI &amp; tech insights</div>
+  </footer>
+
+</div>
+
+<script>
+// ---- STAR FIELD ----
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function createStars(n = 180) {
+  stars = [];
+  for (let i = 0; i < n; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.2 + 0.2,
+      o: Math.random() * 0.6 + 0.1,
+      speed: Math.random() * 0.015 + 0.005,
+      phase: Math.random() * Math.PI * 2
+    });
+  }
+}
+
+function drawStars(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    const opacity = s.o * (0.6 + 0.4 * Math.sin(t * s.speed + s.phase));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(200,220,255,${opacity})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+
+resize();
+createStars();
+window.addEventListener('resize', () => { resize(); createStars(); });
+requestAnimationFrame(drawStars);
+
+// ---- SCROLL ANIMATIONS ----
+const eqLines = document.querySelectorAll('.eq-line');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 150);
+    }
+  });
+}, { threshold: 0.2 });
+
+eqLines.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
