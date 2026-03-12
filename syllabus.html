@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Complete AI Learning Roadmap</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    /* ─── Reset & Variables ─────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #07070f;
+      --bg2:       #0d0d1c;
+      --bg3:       #111128;
+      --border:    #1c1c38;
+      --text:      #d8d8f0;
+      --muted:     #5a5a80;
+      --white:     #f0f0ff;
+      --mono: 'Space Mono', monospace;
+      --serif: 'Crimson Pro', Georgia, serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--serif);
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #2a2a50; border-radius: 3px; }
+
+    /* ─── Hero ──────────────────────────────────────────────── */
+    .hero {
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(0,245,196,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 50%, rgba(162,155,254,0.06) 0%, transparent 55%),
+        var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 64px 24px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255,255,255,0.012) 60px, rgba(255,255,255,0.012) 61px),
+        repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,0.012) 60px, rgba(255,255,255,0.012) 61px);
+      pointer-events: none;
+    }
+
+    .hero-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.35em;
+      color: #00f5c4;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.1s forwards;
+    }
+
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(32px, 6vw, 60px);
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 12px;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.2s forwards;
+    }
+
+    .hero h1 span { color: #00f5c4; font-weight: 600; }
+
+    .hero-sub {
+      font-style: italic;
+      color: var(--muted);
+      font-size: 17px;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.3s forwards;
+    }
+
+    .stats {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.4s forwards;
+    }
+
+    .stat-num {
+      font-family: var(--mono);
+      font-size: 30px;
+      color: #00f5c4;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 2px;
+    }
+
+    /* ─── Sticky Nav ────────────────────────────────────────── */
+    .phase-nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: rgba(7,7,15,0.95);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 24px;
+      overflow-x: auto;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .phase-nav::-webkit-scrollbar { height: 3px; }
+
+    .phase-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 6px 14px;
+      border-radius: 4px;
+      border: 1px solid;
+      cursor: pointer;
+      background: transparent;
+      margin: 0 3px;
+      letter-spacing: 0.05em;
+      transition: all 0.2s;
+    }
+
+    .phase-btn:hover { opacity: 0.8; transform: translateY(-1px); }
+
+    /* ─── Main ──────────────────────────────────────────────── */
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ─── Phase Block ───────────────────────────────────────── */
+    .phase-block {
+      margin-bottom: 72px;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .phase-block.visible { opacity: 1; transform: translateY(0); }
+
+    .phase-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      position: relative;
+    }
+
+    .phase-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--phase-color) 0%, transparent 70%);
+    }
+
+    .phase-icon-box {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+      border: 1px solid;
+    }
+
+    .phase-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      margin-bottom: 2px;
+    }
+
+    .phase-title {
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--white);
+    }
+
+    .phase-counts {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      text-align: right;
+      line-height: 1.7;
+      margin-left: auto;
+    }
+
+    /* ─── Step Cards ────────────────────────────────────────── */
+    .steps-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .step-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--bg2);
+      transition: border-color 0.25s;
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      cursor: pointer;
+      width: 100%;
+      background: transparent;
+      border: none;
+      text-align: left;
+      transition: background 0.2s;
+    }
+
+    .step-header:hover { background: rgba(255,255,255,0.02); }
+
+    .step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+      transition: all 0.25s;
+    }
+
+    .step-info { flex: 1; }
+
+    .step-title {
+      font-size: 16px;
+      color: var(--text);
+      transition: color 0.2s;
+    }
+
+    .step-card.open .step-title { color: var(--white); font-weight: 600; }
+
+    .step-meta {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .step-toggle {
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--muted);
+      transition: transform 0.3s, color 0.2s;
+      line-height: 1;
+      user-select: none;
+    }
+
+    .step-card.open .step-toggle { transform: rotate(45deg); }
+
+    /* ─── Topics Panel ──────────────────────────────────────── */
+    .topics-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    .topics-panel.open { max-height: 3000px; }
+
+    .topics-inner {
+      padding: 0 20px 20px 72px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .topic-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 8px 14px;
+      background: var(--bg);
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+      line-height: 1.55;
+      transition: border-color 0.2s;
+    }
+
+    .topic-row:hover { border-color: #2a2a50; }
+
+    .topic-num {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+      flex-shrink: 0;
+      min-width: 20px;
+    }
+
+    .topic-text { color: #c0c0dc; }
+
+    /* ─── Progress Bar ──────────────────────────────────────── */
+    .progress-wrap {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 2px;
+      z-index: 9999;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00f5c4, #a29bfe);
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* ─── Footer ────────────────────────────────────────────── */
+    .footer {
+      text-align: center;
+      padding: 48px 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-emoji { font-size: 32px; margin-bottom: 12px; }
+    .footer h3 { color: #00f5c4; font-weight: 300; font-size: 22px; margin-bottom: 8px; }
+    .footer p { color: var(--muted); font-style: italic; font-size: 15px; }
+
+    /* ─── Animations ────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Responsive ────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .topics-inner { padding: 0 12px 16px 12px; }
+      .phase-counts { display: none; }
+      .stats { gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div class="progress-wrap">
+  <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<!-- Hero -->
+<header class="hero">
+  <div class="hero-label">Complete Learning Path</div>
+  <h1>Master <span>Artificial Intelligence</span></h1>
+  <p class="hero-sub">From Python to Frontier Models — Every Single Step, In Order</p>
+  <div class="stats">
+    <div><div class="stat-num">8</div><div class="stat-label">Phases</div></div>
+    <div><div class="stat-num">36</div><div class="stat-label">Steps</div></div>
+    <div><div class="stat-num">300+</div><div class="stat-label">Topics</div></div>
+    <div><div class="stat-num">18–24</div><div class="stat-label">Months</div></div>
+  </div>
+</header>
+
+<!-- Phase Navigation -->
+<nav class="phase-nav" id="phaseNav"></nav>
+
+<!-- Main Content -->
+<main class="container" id="mainContent"></main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-emoji">🏁</div>
+  <h3>You've reached the frontier.</h3>
+  <p>Keep reading papers. Keep building. The field moves fast — stay curious.</p>
+</footer>
+
+<script>
+/* ════════════════════════════════════════════════════════
+   DATA
+════════════════════════════════════════════════════════ */
+const roadmap = [
+  {
+    phase: "Phase 1", title: "Programming Foundation", color: "#00f5c4", icon: "⌨️",
+    steps: [
+      {
+        step: 1, title: "Python Basics", duration: "3–4 weeks",
+        topics: [
+          "Variables & Data Types: int, float, str, bool, list, tuple, dict, set",
+          "Operators: Arithmetic, Comparison, Logical, Bitwise, Assignment",
+          "Control Flow: if / elif / else statements",
+          "Loops: for, while, break, continue, pass",
+          "Functions: def, return, *args, **kwargs, lambda functions",
+          "Scope: local, global, nonlocal keywords",
+          "String Manipulation & Formatting: f-strings, .format(), slicing",
+          "List, Dict, Set Comprehensions",
+          "File I/O: open(), read(), write(), with statement",
+          "Exception Handling: try / except / finally / raise / custom exceptions",
+          "Modules & Packages: import, from, pip install, __name__ == '__main__'",
+          "Built-in Functions: map(), filter(), zip(), enumerate(), sorted(), reversed()",
+        ]
+      },
+      {
+        step: 2, title: "Python Intermediate", duration: "2–3 weeks",
+        topics: [
+          "Object-Oriented Programming: Classes, Objects, __init__, self",
+          "Inheritance, Polymorphism, Encapsulation, Abstraction",
+          "Dunder/Magic Methods: __str__, __repr__, __len__, __add__, __eq__",
+          "Decorators: @property, @staticmethod, @classmethod, custom decorators",
+          "Generators & Iterators: yield, next(), StopIteration",
+          "Context Managers: __enter__, __exit__, contextlib.contextmanager",
+          "Recursion & Memoization: functools.lru_cache, functools.cache",
+          "Regular Expressions: re.match, re.search, re.findall, groups, flags",
+          "Useful modules: datetime, os, sys, pathlib, collections, itertools",
+          "Virtual Environments: venv, conda, pip freeze, requirements.txt",
+          "Type Hints & Annotations: typing module — Optional, Union, List, Dict, Callable",
+          "Unit Testing: unittest, pytest, fixtures, parametrize, mocking",
+        ]
+      },
+      {
+        step: 3, title: "Data Manipulation Libraries", duration: "3–4 weeks",
+        topics: [
+          "NumPy: arrays, shapes, ndim, dtype, zeros, ones, arange, linspace, random",
+          "NumPy: indexing, slicing, fancy indexing, boolean masking, advanced indexing",
+          "NumPy: broadcasting rules — how shapes align without copies",
+          "NumPy: universal functions (ufuncs), axis operations, vectorization",
+          "NumPy: linear algebra — np.dot, np.matmul, np.linalg.inv, np.linalg.eig",
+          "Pandas: Series and DataFrame — creation, inspection (head, info, describe)",
+          "Pandas: indexing with loc, iloc, at, iat; boolean/conditional filtering",
+          "Pandas: groupby, agg, transform, pivot_table, crosstab",
+          "Pandas: merge (inner/outer/left/right), join, concat, append",
+          "Pandas: handling missing data — isnull, fillna, dropna, interpolate",
+          "Pandas: apply(), map(), applymap() with lambda functions",
+          "Pandas: reading/writing CSV, Excel, JSON, SQL; to_csv, to_excel, to_json",
+          "Matplotlib: line, bar, scatter, histogram, pie charts; figure and axes",
+          "Matplotlib: subplots (plt.subplots), legends, titles, labels, styling",
+          "Seaborn: pairplot, boxplot, violin, heatmap, distplot, regplot",
+          "Plotly: interactive charts — px.scatter, px.line, px.bar, go.Figure",
+        ]
+      },
+    ]
+  },
+  {
+    phase: "Phase 2", title: "Mathematics for AI", color: "#ff6b6b", icon: "📐",
+    steps: [
+      {
+        step: 4, title: "Statistics & Probability", duration: "4–5 weeks",
+        topics: [
+          "Descriptive Statistics: mean, median, mode, variance, standard deviation, range",
+          "Percentiles, Quartiles (Q1, Q2, Q3), IQR, Outlier Detection (1.5×IQR rule)",
+          "Data visualization for stats: histograms, box plots, density plots",
+          "Probability Basics: sample space, events, P(A), complement rule P(Aᶜ) = 1−P(A)",
+          "Addition Rule: P(A∪B) = P(A) + P(B) − P(A∩B)",
+          "Conditional Probability: P(A|B) = P(A∩B)/P(B)",
+          "Multiplication Rule: P(A∩B) = P(A|B)·P(B)",
+          "Bayes' Theorem: P(A|B) = P(B|A)·P(A) / P(B) — understand deeply",
+          "Independence of events: P(A∩B) = P(A)·P(B)",
+          "Discrete Distributions: Uniform, Bernoulli, Binomial, Geometric, Poisson",
+          "Continuous Distributions: Uniform, Normal (Gaussian), Exponential, Beta, Gamma",
+          "Central Limit Theorem (CLT) — the most important theorem in statistics",
+          "Hypothesis Testing: Null Hypothesis H₀, Alternative H₁, p-value, α level",
+          "Z-test: large samples, known variance; T-test: small samples, unknown variance",
+          "One-sample, Two-sample (independent), Paired T-tests",
+          "Chi-Square Test: independence of categorical variables, goodness of fit",
+          "ANOVA (F-test): comparing means across 3+ groups",
+          "Type I Error (α, false positive) and Type II Error (β, false negative)",
+          "Statistical Power (1−β) and Sample Size determination",
+          "Confidence Intervals: CI = x̄ ± z*(σ/√n) — construction and interpretation",
+          "Correlation: Pearson (linear), Spearman (rank-based), Kendall's τ",
+          "Covariance: Cov(X,Y) = E[(X−μₓ)(Y−μᵧ)] and Covariance Matrix",
+          "Maximum Likelihood Estimation (MLE): maximize L(θ|data)",
+          "Bayesian Inference: Prior P(θ), Likelihood P(data|θ), Posterior P(θ|data)",
+          "A/B Testing fundamentals: design, analysis, multiple testing pitfalls",
+        ]
+      },
+      {
+        step: 5, title: "Linear Algebra", duration: "4–5 weeks",
+        topics: [
+          "Scalars, Vectors, Matrices, Tensors — definitions and geometric intuition",
+          "Vector operations: addition, scalar multiplication, dot product, cross product",
+          "Norm of a vector: L1 (Manhattan), L2 (Euclidean), L∞",
+          "Matrix operations: addition, scalar multiplication, element-wise (Hadamard)",
+          "Matrix multiplication: (AB)ᵢⱼ = Σₖ Aᵢₖ·Bₖⱼ — when it's defined",
+          "Transpose: (AB)ᵀ = BᵀAᵀ — properties",
+          "Matrix-vector multiplication — the core of every neural network layer",
+          "Identity Matrix I, Zero Matrix, Diagonal Matrix, Triangular Matrix",
+          "Inverse Matrix: A·A⁻¹ = I, when it exists, how to compute",
+          "Determinant: geometric meaning (signed area/volume), det(AB) = det(A)·det(B)",
+          "Rank of a matrix: maximum linearly independent rows or columns",
+          "Linear Independence: no vector is a linear combination of others",
+          "Null Space (Kernel), Column Space, Row Space — four fundamental subspaces",
+          "Solving Linear Systems: Gaussian Elimination, back substitution",
+          "LU Decomposition: A = LU for efficient repeated solving",
+          "Eigenvalues λ and Eigenvectors v: Av = λv — geometric meaning",
+          "Eigendecomposition: A = PDP⁻¹ (when A is diagonalizable)",
+          "Singular Value Decomposition (SVD): A = UΣVᵀ — the most important matrix factorization",
+          "Applications of SVD: PCA, recommender systems, compression, pseudo-inverse",
+          "Principal Component Analysis (PCA): maximize variance, built on SVD/eigendecomposition",
+          "Orthogonality, Projections, Gram-Schmidt orthogonalization",
+          "Positive Definite Matrices: all eigenvalues > 0, Cholesky Decomposition",
+          "Frobenius Norm of matrices: ‖A‖_F = √(Σᵢⱼ aᵢⱼ²)",
+          "Tensors: rank-0 (scalar), rank-1 (vector), rank-2 (matrix), higher-rank tensors",
+          "Tensor operations: slicing, reshaping, contraction, Einstein summation (einsum)",
+        ]
+      },
+      {
+        step: 6, title: "Calculus & Optimization", duration: "3–4 weeks",
+        topics: [
+          "Limits and Continuity — intuition and formal ε-δ definition",
+          "Derivatives: power, product, quotient, chain rules",
+          "Derivatives of common functions: exp, log, sin, cos, sigmoid",
+          "Partial Derivatives: ∂f/∂x — rate of change w.r.t. one variable",
+          "Gradient vector ∇f = [∂f/∂x₁, ∂f/∂x₂, ...] — direction of steepest ascent",
+          "Directional Derivative: rate of change in an arbitrary direction",
+          "Jacobian Matrix: matrix of all first-order partial derivatives for vector functions",
+          "Hessian Matrix H: matrix of all second-order partial derivatives",
+          "Chain Rule in multivariable calculus — backpropagation is exactly this",
+          "Gradient Descent: θ ← θ − α·∇L(θ) — intuition and convergence",
+          "Critical Points: ∇f = 0; classify using Hessian (saddle, min, max)",
+          "Convexity: f(λx + (1-λ)y) ≤ λf(x) + (1-λ)f(y) — global minima guaranteed",
+          "Jensen's Inequality for convex functions",
+          "Integration: definite integral, indefinite, fundamental theorem of calculus",
+          "Integration techniques: substitution, integration by parts",
+          "Taylor Series: f(x) ≈ f(a) + f'(a)(x-a) + f''(a)(x-a)²/2! + ...",
+          "Lagrange Multipliers: optimization under equality constraints",
+          "Automatic Differentiation: forward mode (Jacobian-vector), reverse mode (vector-Jacobian)",
+        ]
+      },
+      {
+        step: 7, title: "Information Theory", duration: "1–2 weeks",
+        topics: [
+          "Entropy: H(X) = −Σ p(x) log₂ p(x) — measure of uncertainty/surprise",
+          "Cross-Entropy: H(p,q) = −Σ p(x) log q(x) — the standard ML loss function",
+          "KL Divergence: D_KL(p||q) = Σ p(x) log(p(x)/q(x)) — how different two distributions are",
+          "Mutual Information I(X;Y): shared information, reduction in uncertainty",
+          "Negative Log-Likelihood (NLL): equivalent to cross-entropy for classification",
+          "Perplexity: 2^H(p) — bits per token, standard LLM evaluation metric",
+        ]
+      },
+    ]
+  },
+  {
+    phase: "Phase 3", title: "Machine Learning", color: "#f7b731", icon: "🤖",
+    steps: [
+      {
+        step: 8, title: "ML Fundamentals & Concepts", duration: "2 weeks",
+        topics: [
+          "What is ML? Supervised, Unsupervised, Semi-supervised, Self-supervised, RL",
+          "Training Set, Validation Set, Test Set — purpose of each and why all three",
+          "Bias-Variance Tradeoff — the fundamental tension in all of ML",
+          "Overfitting: model memorizes training data; Underfitting: model too simple",
+          "Cross-Validation: k-Fold, Stratified k-Fold, Leave-One-Out (LOOCV)",
+          "Regularization: L1 (Lasso), L2 (Ridge), ElasticNet — math and intuition",
+          "Loss Functions: MSE, MAE, Huber Loss, Binary Cross-Entropy, Categorical CE, Hinge",
+          "Evaluation Metrics for Classification: Accuracy, Precision, Recall, F1-score, MCC",
+          "ROC Curve and AUC-ROC — threshold-independent evaluation",
+          "Precision-Recall Curve — better for imbalanced datasets",
+          "Confusion Matrix: TP, TN, FP, FN — how to read and interpret",
+          "Evaluation Metrics for Regression: MSE, RMSE, MAE, R², Adjusted R², MAPE",
+          "Feature Engineering: one-hot encoding, ordinal encoding, target encoding",
+          "Feature Scaling: StandardScaler (z-score), MinMaxScaler, RobustScaler",
+          "Feature Selection: filter (correlation), wrapper (RFE), embedded (Lasso coeff)",
+          "Handling Imbalanced Data: SMOTE, oversampling, undersampling, class_weight",
+          "Data Leakage: what it is, how it inflates metrics, how to prevent it",
+          "The No Free Lunch Theorem — no single model is universally best",
+        ]
+      },
+      {
+        step: 9, title: "Supervised Learning — Regression", duration: "2 weeks",
+        topics: [
+          "Simple Linear Regression: OLS derivation, interpreting slope and intercept",
+          "Assumptions of Linear Regression: Linearity, Independence, Normality, Homoscedasticity",
+          "Multiple Linear Regression: multiple features, interpreting coefficients",
+          "Multicollinearity: VIF (Variance Inflation Factor) detection and handling",
+          "Polynomial Regression: adding x², x³ features for non-linear fits",
+          "Ridge Regression (L2): adds λΣwᵢ² penalty, shrinks coefficients",
+          "Lasso Regression (L1): adds λΣ|wᵢ| penalty, produces sparse models",
+          "ElasticNet: combines L1 and L2 — α controls the mix",
+          "Regression metrics in depth: MSE, RMSE, MAE, R², Adjusted R², MAPE, SMAPE",
+        ]
+      },
+      {
+        step: 10, title: "Supervised Learning — Classification", duration: "3 weeks",
+        topics: [
+          "Logistic Regression: sigmoid σ(z) = 1/(1+e⁻ᶻ), decision boundary, log-odds",
+          "k-Nearest Neighbors (kNN): distance metrics (Euclidean, Manhattan, Minkowski), choosing k",
+          "Curse of Dimensionality — why kNN fails in high dimensions",
+          "Naive Bayes: Gaussian NB, Multinomial NB, Bernoulli NB — conditional independence assumption",
+          "Decision Trees: Gini impurity, Entropy, Information Gain, pruning strategies",
+          "Decision Tree hyperparameters: max_depth, min_samples_split, min_samples_leaf",
+          "Support Vector Machines (SVM): hyperplane, margin maximization, support vectors",
+          "Soft-margin SVM: C hyperparameter controls margin vs misclassification tradeoff",
+          "Kernel Trick: map to high-dimensional space implicitly; RBF, polynomial, linear kernels",
+          "Ensemble Methods: Bagging (parallel), Boosting (sequential), Stacking",
+          "Random Forest: bagging + random feature subsets at each split, feature importance",
+          "AdaBoost: sequentially reweight misclassified samples",
+          "Gradient Boosting: fit new tree to residuals of previous ensemble",
+          "XGBoost: regularized gradient boosting, second-order gradients, pruning, speed",
+          "LightGBM: leaf-wise tree growth, GOSS, EFB — extremely fast on large datasets",
+          "CatBoost: native categorical feature handling, ordered boosting, symmetric trees",
+          "Multi-class Classification strategies: One-vs-Rest, One-vs-One, Softmax",
+          "Hyperparameter Tuning: GridSearchCV, RandomizedSearchCV, Bayesian Optimization (Optuna)",
+        ]
+      },
+      {
+        step: 11, title: "Unsupervised Learning", duration: "2 weeks",
+        topics: [
+          "K-Means: algorithm steps, inertia/WCSS, elbow method, k-means++ initialization",
+          "K-Means limitations: assumes spherical clusters, sensitive to initialization",
+          "Hierarchical Clustering: agglomerative (bottom-up), divisive (top-down)",
+          "Linkage methods: single, complete, average, Ward; dendrogram visualization",
+          "DBSCAN: density-based, eps and min_samples parameters, handles noise as outliers",
+          "Gaussian Mixture Models (GMM): soft cluster assignments, EM algorithm",
+          "PCA in depth: covariance matrix → eigendecomposition → project onto top-k eigenvectors",
+          "PCA: variance explained ratio, scree plot, choosing number of components",
+          "t-SNE: non-linear dimensionality reduction; perplexity, crowding problem, non-deterministic",
+          "UMAP: manifold learning, preserves global structure better than t-SNE, faster",
+          "Autoencoders for unsupervised feature learning and compression",
+          "Anomaly Detection: Isolation Forest (path length), LOF (local density), One-Class SVM",
+          "Association Rule Learning: support, confidence, lift; Apriori algorithm, FP-Growth",
+        ]
+      },
+      {
+        step: 12, title: "ML Tools & Frameworks", duration: "2 weeks",
+        topics: [
+          "Scikit-Learn: estimator API (fit, predict, transform), Pipeline, make_pipeline",
+          "Scikit-Learn: ColumnTransformer for handling mixed feature types",
+          "Scikit-Learn: GridSearchCV, RandomizedSearchCV, cross_val_score, cross_validate",
+          "Scikit-Learn: model_selection, metrics, preprocessing, feature_selection modules",
+          "XGBoost API: DMatrix, early_stopping_rounds, eval_metric, feature importance",
+          "LightGBM API: lgb.Dataset, callbacks, DART booster",
+          "Optuna: define-by-run trials, samplers (TPE, CmaEs), pruners",
+          "MLflow: mlflow.log_metric, log_param, log_artifact, model registry",
+          "Joblib: parallel_backend, Parallel + delayed, model dump/load",
+          "SHAP: TreeExplainer, DeepExplainer, summary_plot, waterfall_plot",
+          "Feature-engine: encoders, transformers for feature engineering pipelines",
+        ]
+      },
+    ]
+  },
+  {
+    phase: "Phase 4", title: "Deep Learning", color: "#a29bfe", icon: "🧠",
+    steps: [
+      {
+        step: 13, title: "Neural Network Fundamentals", duration: "3 weeks",
+        topics: [
+          "Biological vs Artificial neuron — drawing the analogy correctly",
+          "Perceptron: weights, bias, threshold activation; limitations (not XOR)",
+          "Multi-Layer Perceptron (MLP): input layer, hidden layers, output layer",
+          "Activation Functions: Sigmoid σ(z), Tanh, ReLU max(0,z), Leaky ReLU, ELU",
+          "Modern activations: Swish (x·σ(x)), GELU, Mish — used in Transformers",
+          "Why non-linearity is essential: stacking linear layers = one linear layer",
+          "Forward Propagation: compute activations layer by layer",
+          "Loss Functions: Binary CE, Categorical CE (Softmax + NLL), MSE, Focal Loss",
+          "Backpropagation: chain rule through computational graph — derive from scratch",
+          "Gradient Descent variants: Batch GD, Mini-batch GD, Stochastic GD",
+          "SGD with Momentum: accumulate velocity, escape local minima",
+          "RMSProp: adaptive learning rates per parameter",
+          "Adam: combines Momentum + RMSProp, bias correction, most popular optimizer",
+          "AdamW: Adam + decoupled weight decay — preferred for Transformers",
+          "Learning Rate Schedules: step decay, cosine annealing, linear warmup + cosine",
+          "Weight Initialization: Xavier/Glorot (sigmoid/tanh), He/Kaiming (ReLU)",
+          "Vanishing Gradient: gradients shrink to zero in deep/sigmoid networks",
+          "Exploding Gradient: gradients grow exponentially — fixed with gradient clipping",
+          "Batch Normalization: normalize over batch dimension, learnable γ, β",
+          "Layer Normalization: normalize over feature dimension — used in Transformers",
+          "Dropout: randomly zero activations with probability p during training",
+          "Early Stopping: stop training when validation loss stops improving",
+          "Universal Approximation Theorem — what it says and what it doesn't guarantee",
+        ]
+      },
+      {
+        step: 14, title: "PyTorch Framework", duration: "3 weeks",
+        topics: [
+          "Tensors: creation (zeros, ones, rand, randn, from_numpy), dtype, device",
+          "Tensor operations: arithmetic, matmul (@), indexing, slicing, reshape, view",
+          "squeeze(), unsqueeze(), permute(), transpose(), contiguous()",
+          "Autograd: requires_grad=True, loss.backward(), param.grad",
+          "Computational graph: dynamic (define-by-run) nature of PyTorch",
+          "torch.no_grad() context for inference; tensor.detach() for stopping gradient flow",
+          "nn.Module: __init__ defines layers, forward() defines computation",
+          "Common layers: nn.Linear, nn.Conv2d, nn.LSTM, nn.GRU, nn.Embedding, nn.Dropout",
+          "Normalization: nn.BatchNorm2d, nn.LayerNorm, nn.GroupNorm",
+          "Loss functions: nn.CrossEntropyLoss, nn.BCEWithLogitsLoss, nn.MSELoss",
+          "Optimizers: torch.optim.Adam, SGD, AdamW; optimizer.step(), optimizer.zero_grad()",
+          "Learning rate schedulers: StepLR, CosineAnnealingLR, OneCycleLR",
+          "Dataset class: __len__ and __getitem__ — create custom datasets",
+          "DataLoader: batch_size, shuffle, num_workers, collate_fn, pin_memory",
+          "Full training loop: for epoch → for batch → forward → loss → backward → step",
+          "Validation loop: model.eval(), torch.no_grad(), compute metrics",
+          "Saving: torch.save(model.state_dict(), path); Loading: model.load_state_dict()",
+          "GPU training: device = 'cuda' if available, model.to(device), batch.to(device)",
+          "torch.compile(): TorchInductor JIT compilation (PyTorch 2.0+) for speedup",
+          "TorchVision: transforms, datasets (ImageNet, CIFAR), pretrained models",
+          "TensorBoard: SummaryWriter, add_scalar, add_image, add_histogram",
+        ]
+      },
+      {
+        step: 15, title: "Convolutional Neural Networks (CNN)", duration: "3 weeks",
+        topics: [
+          "Convolution operation: kernel/filter, stride, padding, dilation, output size formula",
+          "Feature Maps, Receptive Field, and how depth channels work",
+          "Pooling: nn.MaxPool2d, nn.AvgPool2d, Global Average Pooling (GAP)",
+          "Standard CNN block: Conv2d → BatchNorm2d → ReLU → MaxPool / Dropout",
+          "LeNet-5 (1998): first practical CNN, handwritten digit recognition",
+          "AlexNet (2012): deep learning ImageNet breakthrough — ReLU, Dropout, GPU training",
+          "VGGNet: very deep with repeated 3×3 conv blocks, simplicity works",
+          "GoogLeNet / Inception: inception modules, 1×1 convolutions for channel reduction",
+          "ResNet: residual/skip connections y = F(x) + x, solves vanishing gradient at depth",
+          "ResNet-18/34/50/101/152 — understand bottleneck blocks",
+          "DenseNet: each layer receives feature maps from all previous layers",
+          "MobileNet: depthwise separable convolutions for efficient mobile deployment",
+          "EfficientNet: compound scaling of width, depth, and resolution simultaneously",
+          "Transfer Learning: load ImageNet weights, freeze backbone, train new head",
+          "Full fine-tuning: unfreeze all layers, use small learning rate",
+          "Data Augmentation: RandomHorizontalFlip, RandomCrop, ColorJitter, Normalize",
+          "Advanced augmentation: Mixup, CutMix, RandAugment, AutoAugment",
+          "Object Detection: YOLO (v5, v8), SSD (anchor-based), Faster R-CNN (RPN), DETR",
+          "Semantic Segmentation: FCN, U-Net (encoder-decoder + skip connections), DeepLab",
+          "Instance Segmentation: Mask R-CNN adds segmentation head to Faster R-CNN",
+          "Grad-CAM: gradient-weighted class activation mapping for CNN explainability",
+        ]
+      },
+      {
+        step: 16, title: "Recurrent Neural Networks (RNN)", duration: "2 weeks",
+        topics: [
+          "Sequence modeling problem — why feedforward can't handle variable-length sequences",
+          "Simple RNN: hₜ = tanh(Wₓxₜ + Wₕhₜ₋₁ + b), weight sharing across time",
+          "Backpropagation Through Time (BPTT) and truncated BPTT",
+          "Vanishing gradient through time — why tanh/sigmoid don't work for long sequences",
+          "LSTM: cell state (long-term), hidden state (short-term), three gates",
+          "LSTM gates: Forget gate (erase), Input gate (write), Output gate (read)",
+          "LSTM equations — understand and write from memory",
+          "GRU: Reset gate and Update gate — simpler, often comparable to LSTM",
+          "Bidirectional RNN: concatenate forward and backward hidden states",
+          "Stacked/Deep RNNs: output of one RNN layer feeds into next",
+          "Sequence-to-Sequence (Seq2Seq): encoder RNN → context vector → decoder RNN",
+          "Beam Search: keep top-k sequences at each step (better than greedy)",
+          "Teacher Forcing: feed ground truth as decoder input during training",
+          "Applications: time series forecasting, language modeling, NER, POS tagging",
+        ]
+      },
+      {
+        step: 17, title: "Generative Models", duration: "3 weeks",
+        topics: [
+          "Autoencoders: encoder compresses input to latent z, decoder reconstructs",
+          "Reconstruction loss: MSE for continuous, BCE for binary data",
+          "Denoising Autoencoders: add noise to input, learn to denoise as regularization",
+          "Variational Autoencoders (VAE): encoder outputs μ and σ (distribution over z)",
+          "Reparameterization trick: z = μ + σ·ε, ε ~ N(0,1) — enables backprop",
+          "VAE Loss: ELBO = Reconstruction Loss + KL(q(z|x) || p(z))",
+          "VAE latent space: interpolation, generation by sampling p(z) = N(0,I)",
+          "Generative Adversarial Networks (GAN): Generator G and Discriminator D",
+          "GAN minimax: min_G max_D [log D(x) + log(1 − D(G(z)))]",
+          "GAN training instability: mode collapse, oscillation, non-convergence",
+          "DCGAN: deep convolutional GAN, batch norm, LeakyReLU in D, ReLU in G",
+          "Wasserstein GAN (WGAN): Earth Mover Distance, Lipschitz constraint on critic",
+          "WGAN-GP: gradient penalty instead of weight clipping — stable training",
+          "StyleGAN / StyleGAN2: W latent space, AdaIN, progressive growing, path length reg",
+          "Pix2Pix: paired image-to-image translation, U-Net generator, PatchGAN discriminator",
+          "CycleGAN: unpaired translation with cycle consistency loss",
+          "Normalizing Flows: invertible transformations, exact likelihood via change of variables",
+          "Diffusion Models (DDPM): forward process adds Gaussian noise over T steps",
+          "DDPM reverse process: learn pθ(xₜ₋₁|xₜ) to denoise step-by-step",
+          "Diffusion training objective: predict noise εθ(xₜ, t) ≈ ε",
+          "DDIM: deterministic sampling, 10–50× fewer steps, better quality",
+          "Latent Diffusion Models (LDM): diffuse in VAE latent space — Stable Diffusion",
+        ]
+      },
+      {
+        step: 18, title: "Attention & Transformers", duration: "4 weeks",
+        topics: [
+          "Intuition: Attention = soft, learnable retrieval — Query finds relevant Keys",
+          "Scaled Dot-Product Attention: Attention(Q,K,V) = softmax(QKᵀ/√dₖ)·V",
+          "Why scaling by √dₖ? Prevents softmax saturation in high dimensions",
+          "Self-Attention: Q=K=V come from same sequence — tokens attend to each other",
+          "Multi-Head Attention: h parallel heads, each learns different relation type",
+          "MHA: Concat(head₁,...,headₕ)·Wₒ; each headᵢ = Attention(QWᵢQ, KWᵢK, VWᵢV)",
+          "Positional Encoding (sinusoidal): PE(pos,2i) = sin(pos/10000^(2i/d))",
+          "Learned Positional Embeddings — simpler, used in BERT, GPT",
+          "Transformer Encoder block: MH-Self-Attn → Add&Norm → FFN → Add&Norm",
+          "Feed-Forward Network: two linear layers with ReLU/GELU in between",
+          "Transformer Decoder block: Masked MH-Self-Attn → Cross-Attn → FFN",
+          "Causal (Masked) Self-Attention: mask future tokens for autoregressive generation",
+          "Cross-Attention: decoder Q attends to encoder K,V",
+          "Read original paper: 'Attention Is All You Need' (Vaswani et al. 2017)",
+          "BERT: encoder-only, Masked Language Modeling (MLM) + Next Sentence Prediction",
+          "BERT fine-tuning: add task head on top of [CLS] token representation",
+          "GPT family: decoder-only, causal LM, scale is everything",
+          "T5: encoder-decoder, text-to-text framework — every task as seq2seq",
+          "Vision Transformer (ViT): split image into patches → embed → Transformer encoder",
+          "CLIP: contrastive image-text pretraining, zero-shot image classification",
+          "Flash Attention (v1/v2): tiling + recomputation for O(N) memory vs O(N²)",
+          "Rotary Positional Embeddings (RoPE): encode relative position via rotation",
+          "ALiBi: linear bias added to attention scores — extrapolates to longer sequences",
+          "Grouped Query Attention (GQA): share K,V heads among groups of Q heads",
+          "KV Cache: store past K,V pairs to avoid recomputation in autoregressive decoding",
+        ]
+      },
+      {
+        step: 19, title: "Natural Language Processing (NLP)", duration: "3 weeks",
+        topics: [
+          "Text Preprocessing: tokenization, lowercasing, punctuation removal, stopwords",
+          "Stemming (Porter, Snowball) vs Lemmatization (WordNet) — differences and tradeoffs",
+          "Bag of Words (BoW): count vectors, vocabulary, document-term matrix",
+          "TF-IDF: TF(t,d) × IDF(t) = term frequency × inverse document frequency",
+          "N-gram Language Models: bigram, trigram; smoothing (Laplace, Kneser-Ney)",
+          "Perplexity of language models: 2^H(p) — lower is better",
+          "Word2Vec: CBOW (predict word from context) vs Skip-gram (predict context from word)",
+          "Word2Vec training: negative sampling, hierarchical softmax",
+          "GloVe: factorize global word-word co-occurrence matrix, captures analogy",
+          "FastText: use character n-grams — handles morphology and OOV words",
+          "Contextual Embeddings: ELMo (biLSTM-based), BERT (Transformer-based)",
+          "Subword Tokenization: BPE (byte pair encoding, used in GPT), WordPiece (BERT)",
+          "SentencePiece: language-agnostic, handles CJK and other scripts",
+          "Named Entity Recognition (NER): BIO/BIOES tagging scheme",
+          "Part-of-Speech (POS) Tagging: NN, VB, JJ, etc.",
+          "Dependency and Constituency Parsing — syntactic structure",
+          "Sentiment Analysis: binary (pos/neg), multi-class, aspect-based",
+          "Text Classification: news categorization, intent detection, spam filtering",
+          "Machine Translation: seq2seq with attention, Transformer-based NMT, BLEU score",
+          "Question Answering: extractive (predict start/end span), generative (generate answer)",
+          "Text Summarization: extractive (rank sentences) vs abstractive (generate new text)",
+          "HuggingFace Transformers: AutoModel, AutoTokenizer, AutoModelForSequenceClassification",
+          "HuggingFace pipeline(): sentiment-analysis, ner, question-answering, summarization",
+          "HuggingFace Datasets: load_dataset(), DatasetDict, map(), filter()",
+          "Fine-tuning BERT/RoBERTa: Trainer API, TrainingArguments, compute_metrics",
+        ]
+      },
+    ]
+  },
+  {
+    phase: "Phase 5", title: "Generative AI", color: "#fd79a8", icon: "✨",
+    steps: [
+      {
+        step: 20, title: "Large Language Models (LLMs)", duration: "4 weeks",
+        topics: [
+          "LLM Architecture: decoder-only Transformer, autoregressive next-token prediction",
+          "Scaling Laws (Chinchilla paper): optimal tokens ≈ 20× parameters",
+          "Pre-training objective: Causal Language Modeling (CLM) — predict next token",
+          "Tokenization at scale: tiktoken (BPE for GPT), SentencePiece (LLaMA)",
+          "GPT-2 (1.5B) → GPT-3 (175B) → GPT-4 — architectural evolution and scale",
+          "LLaMA 1/2/3: efficient open-weight models; LLaMA 3.1 (8B, 70B, 405B)",
+          "Mistral 7B: sliding window attention (SWA), grouped query attention (GQA)",
+          "Mixtral 8×7B: sparse Mixture of Experts, 2 of 8 experts active per token",
+          "DeepSeek-V3: MoE architecture, efficient pretraining at low cost",
+          "Gemma (Google), Phi-3/4 (Microsoft), Qwen2.5 (Alibaba) — open model ecosystem",
+          "Grouped Query Attention (GQA) and Multi-Query Attention (MQA) for faster inference",
+          "Instruction Tuning (SFT): fine-tune on (instruction, response) pairs",
+          "RLHF pipeline: SFT model → Reward Model training → PPO fine-tuning",
+          "Reward Model: trained on human preference pairs (chosen vs rejected)",
+          "DPO: Direct Preference Optimization — skip explicit RM, optimize on preferences directly",
+          "Constitutional AI (CAI): principles-based RLHF alternative by Anthropic",
+          "In-Context Learning: zero-shot, one-shot, few-shot prompting",
+          "Chain-of-Thought (CoT): 'Let's think step by step' improves reasoning significantly",
+          "Emergent Abilities: appear unpredictably at scale (arithmetic, code, logic)",
+          "Hallucination: confident wrong answers; causes and mitigation strategies",
+          "Context Window: from 2K (GPT-2) to 1M+ tokens (Gemini 1.5), position interpolation",
+          "Benchmarks: MMLU, HellaSwag, HumanEval, GSM8K, GPQA, ARC, WinoGrande",
+        ]
+      },
+      {
+        step: 21, title: "Prompt Engineering", duration: "1–2 weeks",
+        topics: [
+          "Zero-shot Prompting: describe task, no examples needed for capable models",
+          "Few-shot Prompting: 3–10 input-output examples in context",
+          "Chain-of-Thought (CoT): 'think step by step' or show worked examples",
+          "Tree of Thought (ToT): explore multiple reasoning branches, backtrack",
+          "ReAct: interleave Reasoning (Thought) + Acting (tool calls) + Observing",
+          "Self-Consistency: sample k CoT paths, take majority vote on final answer",
+          "Meta-Prompting: prompts that generate or improve other prompts",
+          "Prompt Chaining: decompose into steps, output of one feeds next",
+          "System Prompts: persona, behavior constraints, output format instructions",
+          "Output Formatting: JSON mode, XML tags, Markdown via prompting",
+          "Prompt Injection: malicious input hijacks instructions — defense strategies",
+          "Automatic Prompt Optimization (APO): gradient-free optimization of prompt text",
+          "DSPy: compile LM programs — replace manual prompting with optimized modules",
+        ]
+      },
+      {
+        step: 22, title: "Fine-tuning & Adaptation", duration: "3 weeks",
+        topics: [
+          "Full Fine-tuning: update all parameters — needs many GPUs, risks catastrophic forgetting",
+          "Parameter-Efficient Fine-Tuning (PEFT): update only small fraction of parameters",
+          "LoRA math: freeze W, learn ΔW = BA where B∈R^(d×r), A∈R^(r×k), rank r << min(d,k)",
+          "LoRA rank r and alpha: effective learning rate = alpha/rank × learning_rate",
+          "Which modules to LoRA: q_proj, v_proj minimum; k_proj, o_proj, FFN optionally",
+          "QLoRA: load base model in 4-bit (NF4 quantization) + LoRA in BF16",
+          "QLoRA enables fine-tuning 70B model on a single 48GB A100",
+          "Prefix Tuning: prepend trainable soft tokens to each Transformer layer's attention",
+          "Prompt Tuning: soft prompt at input embedding layer only — lightweight",
+          "Adapter Layers: small bottleneck MLP inserted after attention and FFN blocks",
+          "SFT training data: instruction-response pairs — quality > quantity",
+          "Good SFT datasets: Alpaca (52K), Dolly (15K), OpenHermes, WizardLM, ShareGPT",
+          "HuggingFace PEFT: LoraConfig, TaskType, get_peft_model(), print_trainable_parameters()",
+          "TRL library: SFTTrainer, RewardTrainer, PPOConfig, PPOTrainer, DPOTrainer",
+          "Unsloth: 2× faster LoRA training, 60% less VRAM — practical first choice",
+          "merge_and_unload(): merge LoRA weights into base model for deployment",
+          "Catastrophic Forgetting: model forgets pretrain knowledge — use EWC or replay",
+          "Evaluating fine-tuned models: MT-Bench, AlpacaEval, LLM-as-judge (GPT-4)",
+        ]
+      },
+      {
+        step: 23, title: "Retrieval-Augmented Generation (RAG)", duration: "3 weeks",
+        topics: [
+          "Why RAG? Ground LLMs in external knowledge, reduce hallucination, stay current",
+          "RAG pipeline: Ingestion → Chunking → Embedding → Indexing → Retrieval → Generation",
+          "Document loaders: PDFLoader, WebBaseLoader, DocxLoader, CSVLoader",
+          "Chunking strategies: fixed-size (500 tokens), sentence-level, semantic chunking",
+          "Chunk overlap: 10–20% overlap to preserve context across chunk boundaries",
+          "Embedding models: text-embedding-3-small/large (OpenAI), BGE-M3, E5-large, Nomic-embed",
+          "Vector Databases: Pinecone (managed), Weaviate, Qdrant, Chroma (local), Milvus, FAISS",
+          "FAISS index types: IndexFlatL2, IndexIVFFlat, IndexHNSWFlat — tradeoffs",
+          "Approximate Nearest Neighbor (ANN): HNSW graph index — fast, high recall",
+          "Similarity metrics: cosine similarity (normalized), dot product, L2 distance",
+          "Sparse Retrieval: BM25, TF-IDF — keyword matching, good for exact terms",
+          "Hybrid Retrieval: dense (semantic) + sparse (keyword) merged with RRF",
+          "Reciprocal Rank Fusion (RRF): fuse ranked lists from multiple retrievers",
+          "Reranking: cross-encoder (BERT-based) reranks top-k retrieved docs, Cohere Rerank",
+          "HyDE: generate hypothetical answer, embed it, retrieve — improves abstract queries",
+          "Multi-query RAG: generate k query variants, retrieve for each, deduplicate",
+          "Self-RAG: model generates [Retrieve] tokens to decide when to retrieve",
+          "Corrective RAG (CRAG): evaluate retrieved docs quality, fall back to web search",
+          "LlamaIndex: Documents, Nodes, VectorStoreIndex, QueryEngine, RetrieverQueryEngine",
+          "LangChain RAG: create_retrieval_chain, LCEL (LangChain Expression Language)",
+          "RAG Evaluation (Ragas): faithfulness, answer relevancy, context precision, recall",
+          "Chunking and embedding evaluation: chunk quality metrics, embedding benchmark (MTEB)",
+        ]
+      },
+      {
+        step: 24, title: "Multimodal AI", duration: "2 weeks",
+        topics: [
+          "Vision-Language Models (VLMs): encode image as tokens, feed to LLM",
+          "LLaVA: CLIP ViT encoder + linear projection + Vicuna/LLaMA decoder",
+          "InstructBLIP: Q-Former bridges frozen image encoder and LLM",
+          "GPT-4V, GPT-4o, Claude 3.5 Sonnet — frontier VLMs and their capabilities",
+          "Gemini 1.5 Pro: native multimodal (text, image, audio, video, code) with 1M context",
+          "Visual Question Answering (VQA): VQAv2, GQA benchmarks",
+          "Image Captioning: COCO CIDEr, SPICE metrics",
+          "Stable Diffusion: CLIP text encoder + U-Net denoiser + VAE decoder",
+          "SDXL, SD 3.0, Flux.1: architectural improvements in text-to-image",
+          "DALL-E 3: trained via recaptioning, excellent prompt following",
+          "ControlNet: condition on canny edges, depth maps, human pose, scribbles",
+          "LoRA for image fine-tuning: DreamBooth, textual inversion for concept injection",
+          "Whisper (OpenAI): encoder-decoder Transformer for ASR, multilingual",
+          "MusicGen, AudioCraft (Meta): text-to-music and audio generation",
+          "Text-to-Speech: Bark, XTTS-v2, Parler-TTS — open source options",
+          "Video Generation: Sora (OpenAI), Runway Gen-3, Kling, Wan2.1 — state of the art",
+          "ImageBind (Meta): single embedding space for image, text, audio, video, IMU, depth",
+        ]
+      },
+    ]
+  },
+  {
+    phase: "Phase 6", title: "Agentic AI", color: "#55efc4", icon: "🕹️",
+    steps: [
+      {
+        step: 25, title: "AI Agents Fundamentals", duration: "2–3 weeks",
+        topics: [
+          "AI Agent definition: perceive environment → reason → act → repeat",
+          "ReAct pattern (Yao et al. 2022): Thought → Action → Observation interleaved",
+          "Tool/Function Calling: LLM emits structured JSON to invoke external functions",
+          "JSON Schema for tool definitions: name, description, parameters, required fields",
+          "OpenAI Function Calling API: tools=[ ] parameter, tool_choice, tool_call handling",
+          "Anthropic Tool Use API: tool definitions, tool_use content blocks, tool_result",
+          "Structured output parsing: instructor library (Pydantic), outlines, jsonformer",
+          "Planning strategies: task decomposition, subgoal tree, plan-and-execute",
+          "Memory taxonomy: in-context (conversation), external (DB), episodic, semantic, procedural",
+          "LangChain Agents: AgentExecutor, create_react_agent, create_openai_tools_agent",
+          "LangGraph: StateGraph, nodes as functions, edges as conditions, state persistence",
+          "LangGraph: add_node, add_edge, add_conditional_edges, compile, invoke",
+          "LangGraph checkpointing: SQLiteSaver, MemorySaver for persistent state",
+          "Human-in-the-loop: interrupt_before, interrupt_after, resume after approval",
+          "Agent evaluation: correctness (task completion), efficiency (steps), safety",
+        ]
+      },
+      {
+        step: 26, title: "Multi-Agent Systems", duration: "2 weeks",
+        topics: [
+          "Why Multi-Agent? Specialization, parallelism, peer-checking, scale beyond context",
+          "Orchestrator-Subagent: coordinator agent breaks task, delegates to specialists",
+          "AutoGen (Microsoft): ConversableAgent, AssistantAgent, UserProxyAgent",
+          "AutoGen GroupChat: RoundRobinGroupChat, SelectorGroupChat, Swarm",
+          "CrewAI: Agent (role, goal, backstory), Task, Crew, Process (sequential, hierarchical)",
+          "LangGraph multi-agent: supervisor node routes with LLM, subgraph agents",
+          "Agent communication patterns: message passing, shared state, publish-subscribe",
+          "Debate pattern: multiple agents argue positions, judge resolves — improves accuracy",
+          "Reflection pattern: critic agent reviews and improves generator agent output",
+          "Human-in-the-loop design: approval gates, feedback injection, override mechanisms",
+          "OpenAI Swarm: lightweight handoffs between agents via transfer functions",
+        ]
+      },
+      {
+        step: 27, title: "Agent Memory & Context Management", duration: "1–2 weeks",
+        topics: [
+          "Short-term memory: conversation history, token budget management",
+          "Context window management: sliding window, rolling summarization",
+          "Long-term memory: store and retrieve from vector DB across sessions",
+          "MemGPT / Letta: OS-style virtual context with paging to archival storage",
+          "Mem0: user preference memory layer, cross-session personalization",
+          "Entity tracking: extract entities, update entity state across conversation turns",
+          "Knowledge Graphs as structured agent memory: Neo4j, NetworkX",
+          "Context compression: MapReduce summarization of long histories",
+        ]
+      },
+      {
+        step: 28, title: "Agent Tools & Integrations", duration: "2 weeks",
+        topics: [
+          "Web Search: Tavily Search API, Serper, Brave Search, SerpAPI — agent-friendly",
+          "Code Execution: Python REPL, E2B cloud sandboxes (safe execution environment)",
+          "Browser automation: Playwright MCP, Puppeteer, Selenium controlled by agents",
+          "Web scraping: BeautifulSoup + requests, Scrapy, Playwright for JS-rendered pages",
+          "File system tools: read_file, write_file, list_directory, create_file",
+          "Database tools: text-to-SQL (sqlalchemy), execute_query wrapper",
+          "REST API calling: generic HTTP tool with OpenAPI spec parsing",
+          "Email integration: Gmail API, SendGrid for agent-sent emails",
+          "Calendar tools: Google Calendar API, scheduling and event creation",
+          "Model Context Protocol (MCP): Anthropic's open standard for tool/resource servers",
+          "MCP transport: stdio (local), SSE (remote) — protocol and message format",
+          "MCP Servers: filesystem, browser, GitHub, Slack, Postgres, custom servers",
+          "MCP Clients: Claude Desktop, Cursor, Continue.dev — consuming MCP servers",
+          "Computer Use API (Anthropic): screenshot → analyze → click/type action loop",
+          "Building custom tools: wrap any API/function into LangChain/LangGraph Tool",
+        ]
+      },
+      {
+        step: 29, title: "LLMOps & Agent Production", duration: "2 weeks",
+        topics: [
+          "Observability platforms: LangSmith, Langfuse, Arize Phoenix, Helicone",
+          "Distributed tracing: trace agent runs end-to-end, view every LLM call",
+          "LangSmith: trace datasets, run evaluations, prompt management",
+          "Agent evaluation: LLM-as-judge (GPT-4), human evaluation, task-specific metrics",
+          "Guardrails: NeMo Guardrails (COLANG), Guardrails AI — input/output validation",
+          "Hallucination detection: FactScore, SelfCheckGPT, citation verification",
+          "Rate limiting: exponential backoff with jitter for LLM API calls",
+          "Fallback strategies: primary model → secondary model → cached response",
+          "Cost management: token counting (tiktoken), per-call cost tracking, budget alerts",
+          "Latency optimization: parallel tool calls, streaming with SSE, response caching",
+          "Semantic caching: GPTCache, Redis + embeddings for similar-query caching",
+          "Prompt versioning: PromptLayer, LangSmith Hub, Langfuse prompt management",
+          "Deployment: FastAPI + LangGraph server, LangChain platform",
+        ]
+      },
+    ]
+  },
+  {
+    phase: "Phase 7", title: "MLOps & Deployment", color: "#74b9ff", icon: "🚀",
+    steps: [
+      {
+        step: 30, title: "Model Serving & Deployment", duration: "3 weeks",
+        topics: [
+          "REST API serving: FastAPI (async, auto-docs), Flask (simpler) for ML models",
+          "FastAPI: pydantic models, dependency injection, background tasks, middleware",
+          "Model serialization: pickle (insecure), joblib (sklearn), ONNX, TorchScript",
+          "ONNX: Open Neural Network Exchange format for cross-framework deployment",
+          "ONNX Runtime: optimized CPU/GPU inference engine, quantization support",
+          "torch.export() and TorchScript: JIT compilation for production",
+          "Docker: write Dockerfile, build image, run container, expose port",
+          "Docker best practices: multi-stage builds, .dockerignore, non-root user",
+          "Docker Compose: define multi-service apps (model server + Redis + DB)",
+          "vLLM: PagedAttention (no KV cache fragmentation), continuous batching",
+          "vLLM: OpenAI-compatible API server, tensor parallelism across GPUs",
+          "Ollama: run LLMs locally with simple CLI and REST API, GGUF model support",
+          "Text Generation Inference (TGI): HuggingFace's production LLM server",
+          "NVIDIA Triton Inference Server: multi-framework, batching, model ensemble",
+          "BentoML: Service, Runner abstraction, bentofile.yaml, containerization",
+          "Gradio: gr.Interface, gr.Blocks, gr.ChatInterface — rapid ML demo UIs",
+          "Streamlit: st.write, st.chat_message, st.session_state for ML apps",
+          "AWS SageMaker: training jobs, endpoints, pipelines, model registry",
+          "GCP Vertex AI: custom training, online prediction, pipelines",
+          "HuggingFace Inference Endpoints: serverless and dedicated endpoint options",
+          "Kubernetes for ML: Deployments, Services, HPA, GPU node pools, Helm charts",
+        ]
+      },
+      {
+        step: 31, title: "Quantization & Model Optimization", duration: "2 weeks",
+        topics: [
+          "Numerical formats: FP32 (full), FP16, BF16 (training), INT8, INT4 (inference)",
+          "BF16 vs FP16: BF16 has larger exponent range — preferred for training stability",
+          "Post-Training Quantization (PTQ): quantize after training, no retraining needed",
+          "GPTQ: layer-wise quantization minimizing weight reconstruction error — 4-bit LLMs",
+          "AWQ: activation-aware weight quantization — better accuracy than GPTQ",
+          "GGUF format: llama.cpp quantized format — Q4_K_M, Q5_K_M, Q8_0 variants",
+          "llama.cpp: CPU-first LLM inference, cross-platform, very memory efficient",
+          "Quantization-Aware Training (QAT): simulate quantization noise during training",
+          "Knowledge Distillation: student mimics teacher's logits or hidden states",
+          "Structured Pruning: remove entire attention heads or FFN neurons",
+          "Unstructured Pruning: zero out individual weights (creates sparse tensors)",
+          "Speculative Decoding: small draft model + large verifier → 2–3× speedup",
+          "Tensor Parallelism: split weight matrices across GPUs (Megatron-LM style)",
+          "Pipeline Parallelism: assign different Transformer layers to different GPUs",
+          "Flash Attention 2/3: tiling, kernel fusion — O(N) memory, 2–4× faster",
+          "Gradient Checkpointing: recompute activations on backward pass to save memory",
+          "Mixed Precision Training: BF16 forward/backward, FP32 optimizer states (AMP)",
+          "DeepSpeed ZeRO: partition optimizer states (Z1), gradients (Z2), params (Z3)",
+        ]
+      },
+      {
+        step: 32, title: "MLOps Practices", duration: "2 weeks",
+        topics: [
+          "MLflow: mlflow.log_metric/param/artifact, autolog, Model Registry, mlflow ui",
+          "Weights & Biases (wandb): wandb.init, wandb.log, Sweeps for hyperparameter search",
+          "DVC (Data Version Control): dvc add, dvc push, dvc repro, Git integration",
+          "CI/CD for ML: GitHub Actions — automated testing, linting, model evaluation",
+          "Data Pipelines: Apache Airflow (DAGs, operators), Prefect (flows, tasks, blocks)",
+          "Feature Stores: Feast (open-source, offline + online), Tecton (managed)",
+          "Model Monitoring: track data drift (PSI score), concept drift detection",
+          "Evidently AI: DataDriftPreset, TargetDriftPreset, generate HTML reports",
+          "Shadow Deployment: route production traffic to new model, compare outputs",
+          "Canary Release: send 5% traffic to new model, monitor metrics, ramp up",
+          "A/B Testing models: split traffic, measure primary metric + guardrails",
+          "Model Cards: document model purpose, training data, limitations, evaluation",
+          "Data Sheets: document dataset creation, composition, biases, use cases",
+        ]
+      },
+    ]
+  },
+  {
+    phase: "Phase 8", title: "Advanced & Frontier AI", color: "#e17055", icon: "🔬",
+    steps: [
+      {
+        step: 33, title: "Reinforcement Learning", duration: "4 weeks",
+        topics: [
+          "MDP formalism: State S, Action A, Reward R, Transition P(s'|s,a), Discount γ",
+          "Policy π(a|s): probability of action a in state s",
+          "State Value Function V^π(s) = E[Σ γᵗrₜ | s₀=s, π]",
+          "Action-Value Function Q^π(s,a) = E[Σ γᵗrₜ | s₀=s, a₀=a, π]",
+          "Bellman Expectation Equations for V and Q",
+          "Bellman Optimality Equations: V*(s) = max_a Q*(s,a)",
+          "Dynamic Programming: Policy Evaluation, Policy Improvement, Policy Iteration",
+          "Value Iteration: iteratively apply Bellman optimality until convergence",
+          "Monte Carlo Methods: model-free, estimate V from full episode returns",
+          "TD Learning: TD(0) update: V(s) ← V(s) + α[r + γV(s') − V(s)]",
+          "TD(λ): eligibility traces, interpolates between MC and TD(0)",
+          "Q-Learning: off-policy, Q(s,a) ← Q(s,a) + α[r + γ max_a' Q(s',a') − Q(s,a)]",
+          "DQN: Q-network, experience replay buffer, target network (frozen periodically)",
+          "DQN improvements: Double DQN, Dueling DQN, Prioritized Experience Replay",
+          "Policy Gradient: REINFORCE — ∇J(θ) = E[Gt·∇log π(at|st,θ)]",
+          "Baseline subtraction to reduce variance in policy gradients",
+          "Actor-Critic: actor (policy), critic (value), A(s,a) = Q(s,a) − V(s)",
+          "A2C / A3C: advantage actor-critic, synchronous/asynchronous workers",
+          "PPO: clip(r(θ), 1−ε, 1+ε)·A — prevents large policy updates",
+          "Soft Actor-Critic (SAC): maximum entropy RL, entropy bonus α·H(π)",
+          "GRPO: Group Relative Policy Optimization — used in DeepSeek-R1 training",
+          "Multi-Agent RL: cooperative (shared reward), competitive (zero-sum), mixed",
+          "OpenAI Gymnasium: standard environment interface (reset, step, render)",
+          "Stable-Baselines3: PPO, A2C, SAC, TD3 — reliable implementations",
+        ]
+      },
+      {
+        step: 34, title: "Reasoning & Test-Time Compute", duration: "2 weeks",
+        topics: [
+          "System 1 (fast, intuitive) vs System 2 (slow, deliberate) — applying to AI",
+          "Chain-of-Thought as learned System 2 reasoning in LLMs",
+          "OpenAI o1: trained with RL to generate long internal reasoning chains",
+          "OpenAI o3: improved reasoning, strong on ARC-AGI, AIME, GPQA",
+          "DeepSeek-R1: pure RL (GRPO) + cold-start SFT to elicit chain-of-thought",
+          "Claude 3.7 Sonnet: extended thinking mode with <thinking> blocks",
+          "Test-Time Compute Scaling: spend more inference FLOPS → better answers",
+          "Process Reward Models (PRM): dense reward — score each reasoning step",
+          "Outcome Reward Models (ORM): sparse reward — score only final answer",
+          "Monte Carlo Tree Search (MCTS) for LLM reasoning: rollout, backprop, UCT",
+          "Best-of-N: generate N solutions, pick highest-scoring by PRM/ORM",
+          "Self-Consistency: majority vote across k independent CoT solutions",
+          "Self-play and iterative self-improvement (AlphaGo-style) for LLMs",
+          "Inference scaling laws: compute vs accuracy tradeoff at test time",
+        ]
+      },
+      {
+        step: 35, title: "AI Safety & Alignment", duration: "2 weeks",
+        topics: [
+          "The Alignment Problem: AI systems pursue intended goals in intended ways",
+          "Reward Hacking: agent finds unintended exploit to maximize reward metric",
+          "Goodhart's Law: when a measure becomes a target, it ceases to be a good measure",
+          "Interpretability: understand what neural networks compute internally",
+          "Mechanistic Interpretability: reverse-engineer algorithms in Transformer circuits",
+          "Superposition hypothesis: networks represent more features than dimensions",
+          "Sparse Autoencoders (SAE): extract monosemantic features from polysemantic neurons",
+          "Attention pattern analysis, logit lens, activation patching techniques",
+          "Constitutional AI (CAI): principles-guided RLHF, harmlessness via self-critique",
+          "Red Teaming: systematically find harmful model behaviors before deployment",
+          "Jailbreaking: prompt injection, many-shot jailbreaking, adversarial suffixes",
+          "Bias and Fairness: demographic parity, equalized odds, individual fairness, calibration",
+          "Differential Privacy: ε-DP guarantee, DP-SGD with gradient clipping + noise",
+          "Federated Learning: FedAvg — train locally, aggregate gradients on server",
+          "EU AI Act: risk categories (unacceptable, high, limited, minimal), compliance",
+          "Responsible AI: documentation, audit, incident response, human oversight",
+        ]
+      },
+      {
+        step: 36, title: "What's Happening NOW (2025)", duration: "Ongoing",
+        topics: [
+          "OpenAI: GPT-4o (multimodal, fast), o1/o3/o4-mini (reasoning model family)",
+          "Anthropic: Claude 3.5 Sonnet/Haiku, Claude 3.7 Sonnet (extended thinking), Claude 4",
+          "Google DeepMind: Gemini 1.5 Pro (1M context), Gemini 2.0 Flash (multimodal live)",
+          "Meta: LLaMA 3.1 (8B/70B/405B), LLaMA 3.3 (70B), LLaMA 4 (expected soon)",
+          "DeepSeek-V3: MoE model, near GPT-4 quality, open-weight, low training cost",
+          "DeepSeek-R1: RL-trained reasoning model, matches o1, fully open-source",
+          "Qwen2.5 (Alibaba), Phi-4 (Microsoft), Gemma 3 (Google) — strong small models",
+          "Multimodal frontier: GPT-4o Audio (real-time voice), video understanding",
+          "Long context: 1M tokens (Gemini 1.5), position interpolation advances",
+          "AI Coding: Cursor (IDE agent), Devin (autonomous engineer), Claude Code (CLI)",
+          "Browser Agents: OpenAI Operator, Claude Computer Use going mainstream",
+          "MCP (Model Context Protocol): rapidly growing tool server ecosystem",
+          "AI in Science: AlphaFold 3 (biomolecular structures), drug discovery agents",
+          "On-device AI: Apple Intelligence, Gemini Nano (Android), Phi-3 Mini (edge)",
+          "Reasoning models trend: o1→o3, R1, extended thinking — test-time compute scaling",
+          "Read arxiv weekly: cs.AI, cs.LG, cs.CL at arxiv.org/list/cs.AI/recent",
+          "Follow on X: @karpathy, @ylecun, @sama, @AnthropicAI, @OpenAI",
+          "Newsletters: The Batch (deeplearning.ai), Import AI (Jack Clark), Ahead of AI",
+          "Podcasts: Lex Fridman, Dwarkesh Patel, No Priors, Practical AI",
+          "Communities: r/MachineLearning, Hugging Face Discord, MLOps Community",
+        ]
+      },
+    ]
+  },
+];
+
+/* ════════════════════════════════════════════════════════
+   BUILD UI
+════════════════════════════════════════════════════════ */
+const nav  = document.getElementById('phaseNav');
+const main = document.getElementById('mainContent');
+
+roadmap.forEach((phase, pi) => {
+
+  /* ── Nav Button ── */
+  const btn = document.createElement('button');
+  btn.className = 'phase-btn';
+  btn.innerHTML = `${phase.icon} ${phase.phase}`;
+  btn.style.color = phase.color;
+  btn.style.borderColor = phase.color + '66';
+  btn.addEventListener('click', () => {
+    document.getElementById(`phase-${pi}`)
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  nav.appendChild(btn);
+
+  /* ── Phase Block ── */
+  const block = document.createElement('section');
+  block.className = 'phase-block';
+  block.id = `phase-${pi}`;
+  block.style.setProperty('--phase-color', phase.color);
+
+  const totalTopics = phase.steps.reduce((a, s) => a + s.topics.length, 0);
+
+  block.innerHTML = `
+    <div class="phase-header">
+      <div class="phase-icon-box"
+           style="background:${phase.color}18; border-color:${phase.color}44;">
+        ${phase.icon}
+      </div>
+      <div class="phase-meta">
+        <div class="phase-tag" style="color:${phase.color}">${phase.phase}</div>
+        <div class="phase-title">${phase.title}</div>
+      </div>
+      <div class="phase-counts">${phase.steps.length} steps<br>${totalTopics} topics</div>
+    </div>
+    <div class="steps-list" id="steps-${pi}"></div>
+  `;
+  main.appendChild(block);
+
+  const stepsList = block.querySelector(`#steps-${pi}`);
+
+  /* ── Step Cards ── */
+  phase.steps.forEach((step) => {
+    const card = document.createElement('div');
+    card.className = 'step-card';
+
+    card.innerHTML = `
+      <button class="step-header" aria-expanded="false">
+        <div class="step-num" style="color:${phase.color}; border-color:${phase.color};">
+          ${step.step}
+        </div>
+        <div class="step-info">
+          <div class="step-title">${step.title}</div>
+          <div class="step-meta">${step.topics.length} topics &nbsp;·&nbsp; ${step.duration}</div>
+        </div>
+        <div class="step-toggle" style="color:${phase.color};">+</div>
+      </button>
+      <div class="topics-panel">
+        <div class="topics-inner">
+          ${step.topics.map((t, i) => `
+            <div class="topic-row">
+              <span class="topic-num">${String(i + 1).padStart(2, '0')}</span>
+              <span class="topic-text">${t}</span>
+            </div>`).join('')}
+        </div>
+      </div>
+    `;
+
+    const header = card.querySelector('.step-header');
+    const panel  = card.querySelector('.topics-panel');
+    const numEl  = card.querySelector('.step-num');
+
+    header.addEventListener('click', () => {
+      const open = card.classList.toggle('open');
+      panel.classList.toggle('open', open);
+      header.setAttribute('aria-expanded', open);
+      if (open) {
+        numEl.style.background = phase.color;
+        numEl.style.color = '#07070f';
+        card.style.borderColor = phase.color + '55';
+        card.style.background = '#111128';
+      } else {
+        numEl.style.background = 'transparent';
+        numEl.style.color = phase.color;
+        card.style.borderColor = '';
+        card.style.background = '';
+      }
+    });
+
+    stepsList.appendChild(card);
+  });
+});
+
+/* ════════════════════════════════════════════════════════
+   SCROLL PROGRESS BAR
+════════════════════════════════════════════════════════ */
+const fill = document.getElementById('progressFill');
+window.addEventListener('scroll', () => {
+  const scrolled = document.documentElement.scrollTop;
+  const total    = document.documentElement.scrollHeight
+                 - document.documentElement.clientHeight;
+  fill.style.width = (scrolled / total * 100) + '%';
+}, { passive: true });
+
+/* ════════════════════════════════════════════════════════
+   INTERSECTION OBSERVER — animate phases in on scroll
+════════════════════════════════════════════════════════ */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.05 });
+
+document.querySelectorAll('.phase-block').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
