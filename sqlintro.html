@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>bin/sql/</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="intro.css"/>
+<link rel="stylesheet" href="bin-logo.css"/>
+
+<style>
+  html { scroll-behavior: auto; }
+  /* ── TAB ALIVE: shake once, then silent for 5s, repeat ── */
+@keyframes tabShake {
+  0%    { transform: rotate(0deg); }
+  2%    { transform: rotate(-8deg) translateY(-2px); }
+  4%    { transform: rotate(6deg)  translateY(-1px); }
+  6%    { transform: rotate(-5deg) translateY(-2px); }
+  8%    { transform: rotate(4deg)  translateY(-1px); }
+  10%   { transform: rotate(-2deg); }
+  12%   { transform: rotate(2deg); }
+  14%   { transform: rotate(0deg); }
+  100%  { transform: rotate(0deg); }
+}
+ 
+.folder-tab {
+  animation: tabShake 5.6s ease-in-out infinite;
+}
+ 
+/* Pause on hover/open */
+.bin-wrap:hover .folder-tab,
+.bin-wrap.open  .folder-tab {
+  animation-play-state: paused;
+}
+
+/* ── ORG CHART TREE ─────────────────────────────────────────── */
+.org-scroll-wrap {
+  margin-top: 1.8rem;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 1.5rem;
+}
+.org-wrap { position: relative; margin: 0 auto; }
+.org-node {
+  position: absolute;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+  border-radius: 6px; cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+  box-sizing: border-box; padding: 6px 10px;
+  user-select: none; z-index: 2;
+}
+
+/* ROOT — solid accent fill */
+.org-node.type-root {
+  background: var(--accent);
+  border: none;
+  box-shadow: 0 0 22px rgba(200,255,0,0.35), 0 0 0 2px rgba(255,255,255,0.10) inset;
+  color: var(--bg);
+  font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 0.82rem;
+}
+[data-theme="light"] .org-node.type-root {
+  box-shadow: 0 0 22px rgba(29,78,216,0.25), 0 0 0 2px rgba(255,255,255,0.18) inset;
+  color: #fff;
+}
+
+/* BRANCH — accent border + soft accent background */
+.org-node.type-branch {
+  border: 1.5px solid var(--accent-border);
+  background: var(--accent-soft);
+  color: var(--text-tag);
+  font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 0.72rem;
+  box-shadow: 0 4px 16px rgba(200,255,0,0.08);
+}
+[data-theme="light"] .org-node.type-branch {
+  box-shadow: 0 4px 16px rgba(29,78,216,0.08);
+}
+
+/* LEAF — glass surface, muted text */
+.org-node.type-leaf {
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-body);
+  font-family: 'DM Mono', monospace; font-weight: 400; font-size: 0.63rem;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+}
+[data-theme="light"] .org-node.type-leaf {
+  background: rgba(255,255,255,0.72);
+  color: var(--text-body);
+}
+
+.org-node .node-desc {
+  display: block; font-size: 0.56rem; opacity: 0.5; margin-top: 2px;
+  font-family: 'DM Mono', monospace;
+}
+.org-node .node-label { line-height: 1.3; }
+</style>
+</head>
+<body>
+
+<canvas id="space"></canvas>
+
+<nav>
+  <div class="bin-wrap" id="binWrap">
+
+  <!-- Single sliding page -->
+  <div class="slide-page" id="slidePage">
+
+    <!-- Link track img / Link proceed name-->
+    <img class="sl-name" src="sql_logo.png" alt="SQL Logo" width="15px" height="15px"/>
+
+    <!-- Line elements -->
+    <div class="sl-line"></div>
+    <div class="sl-line"></div>
+    <div class="sl-line"></div>
+    <div class="sl-line"></div>
+  </div>
+
+  <!-- Folder SVG -->
+  <svg class="folder-svg" viewBox="0 0 120 100">
+    <defs>
+      <!-- Vibrant: electric blue → deep purple → hot pink → orange -->
+      <linearGradient id="paintBack" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#3a6ff7"/>
+        <stop offset="40%"  stop-color="#6b30d6"/>
+        <stop offset="70%"  stop-color="#ff3cac"/>
+        <stop offset="100%" stop-color="#ff6b1a"/>
+      </linearGradient>
+      <linearGradient id="paintTab" x1="0%" y1="100%" x2="100%" y2="0%">
+        <stop offset="0%"   stop-color="#ff3cac"/>
+        <stop offset="50%"  stop-color="#ff6b1a"/>
+        <stop offset="100%" stop-color="#3a6ff7"/>
+      </linearGradient>
+      <linearGradient id="paintFront" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#3a6ff7"/>
+        <stop offset="35%"  stop-color="#6b30d6"/>
+        <stop offset="65%"  stop-color="#ff3cac"/>
+        <stop offset="100%" stop-color="#ff6b1a"/>
+      </linearGradient>
+    </defs>
+    <rect class="folder-back" x="10" y="28" width="100" height="66" rx="6"/>
+    <path class="folder-tab" d="M10 28 L10 18 Q10 13 15 13 L46 13 Q51 13 53 18 L57 28 Z"/>
+
+    <g class="paper p3"><rect x="24" y="36" width="72" height="52" rx="3"/></g>
+    <g class="paper p2"><rect x="20" y="34" width="72" height="52" rx="3"/></g>
+    <g class="paper p1"><rect x="16" y="32" width="72" height="52" rx="3"/></g>
+    <g class="paper-lines">
+      <line x1="22" y1="44" x2="82" y2="44"/>
+      <line x1="22" y1="52" x2="78" y2="52"/>
+      <line x1="22" y1="60" x2="80" y2="60"/>
+      <line x1="22" y1="68" x2="72" y2="68"/>
+    </g>
+
+    <rect class="folder-front" x="10" y="28" width="100" height="66" rx="6"/>
+    <text class="bin-label" x="60" y="75">BIN</text>
+  </svg>
+
+</div>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#"        class="active">Home</a></li>
+    <li><a href="#learn">Learn</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="burger" id="burger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mob-menu" id="mob">
+  <a href="#">Home</a>
+  <a href="#learn">Learn</a>
+  <a href="#projects">Projects</a>
+  <a href="#about">About</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<main id="void">
+
+  <!-- AI Content Section -->
+  <div id="section">
+    <div class="header">
+      <div class="header-dot"></div>
+      <h2>SQL<span>( Structured Query Language )</span></h2>
+      <span>edition · v1.1</span>
+    </div>
+    <div class="scroll-body">
+
+      <div class="topic">
+        <div class="topic-tag">Overview</div>
+        <h3>What is SQL?</h3>
+        <p style="text-indent:24px"><em class="highlight">S</em>tructured <em class="highlight">Q</em>uery <em class="highlight">L</em>anguage (SQL)
+          is the standard programming language used to manage, manipulate and retrieve data stored in <em class="highlight">relational databases</em>. It allows you to communicate with databases using simple commands like <code>CREATE</code>, <code>RETRIVE</code>, <code>UPDATE</code> and <code>DELETE</code> to handle large amounts of data efficiently.</p>
+        <p>To understand SQL, we have to know about the basics terms like <em class="highlight"></em>data & database. Difference between DBMS and RDBMS. How they these are related to each other ?</p>
+      </div>
+
+      <div class="topic">
+        <div class="topic-tag">path</div>
+        <h3>Basics of SQL</h3>
+        <div class="timeline">
+          <div class="tl-item"><a class="tl-head" href="#data">&nbsp;Data</a><span class="tl-text">It is a rawfact which describes <em>properties of an Object</em>.</span></div>
+          <div class="tl-item"><a class="tl-head" href="#database">&nbsp;Database</a><span class="tl-text">A place / medium which will store the data in <em>Systematic</em> & <em>Organized</em> Manner.</span></div>
+          <div class="tl-item"><a class="tl-head" href="#dbms">&nbsp;DBMS</a><span class="tl-text">It is a Software which is used to maintain the DB ( data in <em>file format</em> ).</span></div>
+          <div class="tl-item"><a class="tl-head" href="#rdbms">&nbsp;RDBMS</a><span class="tl-text">Type of DBMS Software also used for DB ( but, data in <em>table format</em> )</span></div>
+        </div>
+      </div>
+
+      <div class="topic" id="data">
+        <div class="topic-tag">v1.1-data</div>
+        <h3>Data - core business assets</h3>
+        <p style="text-indent:24px"><em class="highlight">Data</em> is the raw material of <em>information</em>, collected from various sources like words, images, symbols also from observations.</p>
+        <p class="or">( or )</p>
+        <p style="text-indent: 24px;"><em class="highlight"></em>A collection of <em class="highlight">facts</em> in the form of words, numbers and even pictures.</p>
+      </div>
+
+      <div class="topic" id="database">
+        <div class="topic-tag">v1.1-db</div>
+        <h3>Database - Storage unit</h3>
+        <p style="text-indent:24px"><em class="highlight">Database</em> is an <em>organized</em> collection of <em>structured data</em> stored electronically in a computer system &amp; managed by DBMS.</p>
+        <p class="or">( or )</p>
+        <p style="text-indent: 24px;">A <em class="highlight">repository</em> of data - A program that stores data.</p>
+        <p>A Database is more than just storage - It is a <em>structured</em>, <em>secure</em>, <em>scalable</em> system that <em class="highlight">transforms</em> raw data into usable information.</p>
+      </div>
+
+      <div class="topic" id="dbms">
+        <div class="topic-tag">v1.1-dbms</div>
+        <h3>DBMS - Manager</h3>
+        <p style="text-indent:24px"><em>DataBase Management System</em> shortly as DBMS, which is used to <em class="highlight">maintain</em> the database, like a store manager who stocks shelves and helps you to find items easily &amp; rapidly.</p>
+        <p style="text-indent:24px">A software that manages data in a <em>structured</em> way, often using <em class="highlight">files</em> ( or ) <em class="highlight">hierarchical</em> models. To communicate with DBMS software, we use <em class="highlight">QL</em> ( Query Language ).</p>
+      </div>
+      <div class="topic" id="rdbms">
+        <div class="topic-tag">v1.1-rdbms</div>
+        <h3>RDBMS - Organised Layout</h3>
+        <p style="text-indent:24px"><em>Relational Database Management System</em>, a type of DBMS that organises data in <em class="highlight">tables</em> ( <em class="highlight">relations</em> ) with rows and columns. It enforces relationships using <em>primary keys</em> &amp; <em>foreign keys</em>.</p>
+        <p style="text-indent:12px">-> To communicate with RDBMS, we use <em class="highlight">SQL</em> ( Structured Query Language ).</p>
+        <p style="text-indent:24px">The main reason to introduce the RDBMS is, to overcome the <em>storage</em> issues associated with earlier database systems. By providing a structured approach to data management, RDBMS ensures data integrity, reduces redundancy and facilitates efficient querying and updating of information.</p>
+      </div>
+      <div class="topic">
+        <h4>Features in DBMS &amp; RDBMS</h4>
+        <p>There are 2 main features:</p>
+        <!-- ── FEATURES TREE ── -->
+        <div class="org-scroll-wrap">
+          <div class="org-wrap" id="orgWrap2">
+            <svg id="orgSvg2" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:visible;"></svg>
+            <!-- nodes injected by JS -->
+          </div>
+        </div>
+        <p style="text-indent:12px"><em style="margin-left: 2.6em;">Security</em> : Individual password ( users have their own password to access the database )</p>
+        <p style="text-indent:12px"><em>Authorisation</em> : Give access to specific users based on their roles with permissions.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SIDEBAR ── -->
+  <aside id="sidebar">
+
+    <!-- Social Links -->
+    <div class="sb-section">
+      <div class="sb-label">Connect</div>
+      <a class="sb-link" href="https://www.instagram.com/iacc.bin/" target="_blank" rel="noopener">
+        <span class="sb-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="sb-name">Instagram</span>
+        <span class="sb-arrow">↗</span>
+      </a>
+      <a class="sb-link" href="https://www.youtube.com/" target="_blank" rel="noopener">
+        <span class="sb-icon">
+          <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.54C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="sb-name">YouTube</span>
+        <span class="sb-arrow">↗</span>
+      </a>
+      <!-- <a class="sb-link" href="https://github.com/" target="_blank" rel="noopener">
+        <span class="sb-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        </span>
+        <span class="sb-name">GitHub</span>
+        <span class="sb-arrow">↗</span>
+      </a>
+      <a class="sb-link" href="https://x.com/" target="_blank" rel="noopener">
+        <span class="sb-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4l16 16M20 4L4 20"/></svg>
+        </span>
+        <span class="sb-name">X / Twitter</span>
+        <span class="sb-arrow">↗</span>
+      </a> -->
+    </div>
+
+    <!-- Concepts -->
+    <div class="sb-section">
+      <div class="sb-label">Topics</div>
+      <div class="sb-concepts">
+        <a class="sb-pill" href="https://sqlintro.html/" target="_blank" rel="noopener">
+          SQL <span class="sb-pill-tag">DB</span>
+        </a>
+        <!-- <a class="sb-pill" href="https://www.python.org/" target="_blank" rel="noopener">
+          Python <span class="sb-pill-tag">Lang</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Machine_learning" target="_blank" rel="noopener">
+          Machine Learning <span class="sb-pill-tag">ML</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Deep_learning" target="_blank" rel="noopener">
+          Deep Learning <span class="sb-pill-tag">DL</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Artificial_intelligence" target="_blank" rel="noopener">
+          Artificial Intelligence <span class="sb-pill-tag">AI</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Natural_language_processing" target="_blank" rel="noopener">
+          NLP <span class="sb-pill-tag">Text</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Computer_vision" target="_blank" rel="noopener">
+          Computer Vision <span class="sb-pill-tag">CV</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Reinforcement_learning" target="_blank" rel="noopener">
+          Reinforcement Learning <span class="sb-pill-tag">RL</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Data_science" target="_blank" rel="noopener">
+          Data Science <span class="sb-pill-tag">DS</span>
+        </a>
+        <a class="sb-pill" href="https://en.wikipedia.org/wiki/Large_language_model" target="_blank" rel="noopener">
+          LLMs <span class="sb-pill-tag">Gen</span>
+        </a> -->
+      </div>
+    </div>
+
+  </aside>
+
+</main>
+
+<!-- ══ THEME TOGGLE — single button ══ -->
+<div id="theme-toggle">
+  <button id="toggle-btn" aria-label="Toggle theme">
+    <span class="t-icon">
+      <!-- Sun: shown in dark mode (click → go light) -->
+      <svg class="icon-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1" x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <!-- Moon: shown in light mode (click → go dark) -->
+      <svg class="icon-moon" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </span>
+    <span class="t-label" id="toggle-label">Light Mode</span>
+  </button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  COSMIC VOID — Canvas Engine
+// ═══════════════════════════════════════════════════════════════
+const CV = document.getElementById('space');
+const CX = CV.getContext('2d');
+let W, H;
+const resize = () => { W = CV.width = innerWidth; H = CV.height = innerHeight; };
+resize();
+addEventListener('resize', resize);
+ 
+const STARS = Array.from({length:340}, () => ({
+  x: Math.random(), y: Math.random(),
+  r: Math.random() * 1.35 + 0.08,
+  a: Math.random() * 0.52 + 0.1,
+  tw: Math.random() * Math.PI * 2,
+  ts: 0.003 + Math.random() * 0.02,
+}));
+const FEATURE_STARS = Array.from({length:12}, () => ({
+  x: Math.random(), y: Math.random(),
+  r: 1.8 + Math.random() * 1.4,
+  a: 0.55 + Math.random() * 0.35,
+  tw: Math.random() * Math.PI * 2,
+  ts: 0.002 + Math.random() * 0.008,
+}));
+ 
+function drawStars(t) {
+  for (const s of STARS) {
+    const a = s.a * (0.62 + 0.38 * Math.sin(s.tw + t * s.ts));
+    CX.beginPath();
+    CX.arc(s.x * W, s.y * H, s.r, 0, 6.283);
+    CX.fillStyle = `rgba(218,225,255,${a.toFixed(2)})`;
+    CX.fill();
+  }
+  for (const s of FEATURE_STARS) {
+    const a = s.a * (0.7 + 0.3 * Math.sin(s.tw + t * s.ts));
+    const sx = s.x * W, sy = s.y * H;
+    CX.strokeStyle = `rgba(255,255,255,${(a*0.35).toFixed(2)})`;
+    CX.lineWidth = 0.5;
+    CX.beginPath(); CX.moveTo(sx - s.r*4, sy); CX.lineTo(sx + s.r*4, sy); CX.stroke();
+    CX.beginPath(); CX.moveTo(sx, sy - s.r*4); CX.lineTo(sx, sy + s.r*4); CX.stroke();
+    CX.beginPath();
+    CX.arc(sx, sy, s.r, 0, 6.283);
+    CX.fillStyle = `rgba(255,252,240,${a.toFixed(2)})`;
+    CX.fill();
+  }
+}
+ 
+function drawNebulas() {
+  const NB = [
+    [0.12, 0.22, 0.38, 22,  42, 145, 0.072],
+    [0.82, 0.58, 0.30, 82,  18, 118, 0.058],
+    [0.50, 0.90, 0.44, 18,  78, 125, 0.052],
+    [0.62, 0.10, 0.26, 122, 58,  18, 0.038],
+    [0.28, 0.72, 0.22, 40,  95, 160, 0.034],
+  ];
+  for (const [fx,fy,fr,r,g,b,a] of NB) {
+    const grd = CX.createRadialGradient(fx*W, fy*H, 0, fx*W, fy*H, fr*Math.max(W,H));
+    grd.addColorStop(0, `rgba(${r},${g},${b},${a})`);
+    grd.addColorStop(1, 'rgba(0,0,0,0)');
+    CX.fillStyle = grd;
+    CX.fillRect(0, 0, W, H);
+  }
+}
+ 
+function drawMilkyWay() {
+  const g = CX.createLinearGradient(0, H*0.82, W, H*0.05);
+  g.addColorStop(0,    'rgba(0,0,0,0)');
+  g.addColorStop(0.22, 'rgba(125,138,192,0.018)');
+  g.addColorStop(0.50, 'rgba(168,175,218,0.038)');
+  g.addColorStop(0.78, 'rgba(125,138,192,0.018)');
+  g.addColorStop(1,    'rgba(0,0,0,0)');
+  CX.fillStyle = g;
+  CX.fillRect(0, 0, W, H);
+}
+ 
+function draw(t) {
+  CX.fillStyle = '#020205';
+  CX.fillRect(0, 0, W, H);
+  drawNebulas();
+  drawMilkyWay();
+  drawStars(t);
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+
+
+// ─── FEATURES TREE ────────────────────────────────────────────
+(function() {
+  const TREE2 = {
+    id:'root2', label:'Features', type:'root',
+    children:[
+      { id:'sec', label:'Security', type:'branch', children:[
+        //{id:'s1', label:'Authentication',        desc:'Identity verification'},
+        //{id:'s2', label:'Encryption\n(TLS/AES)', desc:'Data in transit & at rest'},
+        //{id:'s3', label:'Threat\nDetection',     desc:'Anomaly & intrusion alerts'},
+        //{id:'s4', label:'Data\nPrivacy',          desc:'PII masking & compliance'},
+        //{id:'s5', label:'Audit\nLogs',            desc:'Immutable activity trail'},
+      ]},
+      { id:'authz', label:'Authorization', type:'branch', children:[
+        //{id:'az1', label:'RBAC',                  desc:'Role-based access control'},
+        //{id:'az2', label:'OAuth 2.0',             desc:'Delegated token auth'},
+        //{id:'az3', label:'JWT\nTokens',           desc:'Signed claims payload'},
+        //{id:'az4', label:'Permissions\n& Scopes', desc:'Granular resource access'},
+        //{id:'az5', label:'Policy\nEnforcement',   desc:'Allow/deny rule engine'},
+      ]},
+    ]
+  };
+
+  const NODE_W      = 120,  NODE_H_ROOT = 52;
+  const NODE_H_BR   = 46,   NODE_H_LEAF = 50;
+  const COL_GAP     = 40;
+  const LEAF_GAP    = 12;
+  const LEVEL_GAP_1 = 72;
+  const LEVEL_GAP_2 = 60;
+
+  const branches  = TREE2.children;
+  const nBranches = branches.length;
+  const TOTAL_W   = nBranches * NODE_W + (nBranches - 1) * COL_GAP;
+  const pos = {};
+
+  pos[TREE2.id] = { x: TOTAL_W/2 - NODE_W/2, y: 0, w: NODE_W, h: NODE_H_ROOT };
+  let totalH = NODE_H_ROOT + LEVEL_GAP_1 + NODE_H_BR;
+
+  branches.forEach((br, bi) => {
+    const bx = bi * (NODE_W + COL_GAP);
+    const by = NODE_H_ROOT + LEVEL_GAP_1;
+    pos[br.id] = { x: bx, y: by, w: NODE_W, h: NODE_H_BR };
+    let ly = by + NODE_H_BR + LEVEL_GAP_2;
+    br.children.forEach(lf => {
+      pos[lf.id] = { x: bx, y: ly, w: NODE_W, h: NODE_H_LEAF };
+      ly += NODE_H_LEAF + LEAF_GAP;
+    });
+    totalH = Math.max(totalH, ly);
+  });
+
+  const wrap2 = document.getElementById('orgWrap2');
+  if (!wrap2) return;
+  wrap2.style.width  = TOTAL_W + 'px';
+  wrap2.style.height = totalH  + 'px';
+
+  function makeNode(data, p) {
+    const d = document.createElement('div');
+    d.className = 'org-node type-' + p.type;
+    d.style.left   = p.x + 'px';
+    d.style.top    = p.y + 'px';
+    d.style.width  = p.w + 'px';
+    d.style.height = p.h + 'px';
+    const lbl = document.createElement('span');
+    lbl.className = 'node-label';
+    lbl.style.whiteSpace = 'pre-line';
+    lbl.textContent = data.label;
+    d.appendChild(lbl);
+    if (data.desc) {
+      const desc = document.createElement('span');
+      desc.className = 'node-desc';
+      desc.textContent = data.desc;
+      d.appendChild(desc);
+    }
+    return d;
+  }
+
+  wrap2.appendChild(makeNode(TREE2, { ...pos[TREE2.id], type:'root' }));
+  branches.forEach(br => {
+    wrap2.appendChild(makeNode(br, { ...pos[br.id], type:'branch' }));
+    br.children.forEach(lf =>
+      wrap2.appendChild(makeNode(lf, { ...pos[lf.id], type:'leaf' }))
+    );
+  });
+
+  // SVG connector lines (right-angle elbows)
+  const svg2 = document.getElementById('orgSvg2');
+  if (!svg2) return;
+
+  function getTreeLineColors() {
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    return isLight
+      ? { c1: '#1d4ed8', c2: 'rgba(29,78,216,0.4)', c3: 'rgba(29,78,216,0.55)', c4: 'rgba(29,78,216,0.2)' }
+      : { c1: '#c8ff00', c2: 'rgba(200,255,0,0.4)',  c3: 'rgba(200,255,0,0.55)',  c4: 'rgba(200,255,0,0.2)'  };
+  }
+
+  function renderTreeGradients() {
+    const col = getTreeLineColors();
+    const defs = svg2.querySelector('defs') || svg2.insertBefore(
+      document.createElementNS('http://www.w3.org/2000/svg','defs'), svg2.firstChild);
+    defs.innerHTML = `
+      <linearGradient id="lg3" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%"   stop-color="${col.c1}"/>
+        <stop offset="100%" stop-color="${col.c2}"/>
+      </linearGradient>
+      <linearGradient id="lg4" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%"   stop-color="${col.c3}"/>
+        <stop offset="100%" stop-color="${col.c4}"/>
+      </linearGradient>`;
+  }
+
+  svg2.innerHTML = '<defs></defs>';
+  renderTreeGradients();
+
+  // Re-colour lines whenever theme changes
+  const _themeObs = new MutationObserver(() => renderTreeGradients());
+  _themeObs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  function cx(p) { return p.x + p.w / 2; }
+  function bot(p){ return p.y + p.h; }
+  function top(p){ return p.y; }
+
+  function addLine(x1,y1,x2,y2,grad) {
+    const my = (y1 + y2) / 2;
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d', `M${x1},${y1} L${x1},${my} L${x2},${my} L${x2},${y2}`);
+    path.setAttribute('stroke', `url(#${grad})`);
+    path.setAttribute('stroke-width','1.6');
+    path.setAttribute('fill','none');
+    path.setAttribute('opacity','0.75');
+    svg2.appendChild(path);
+  }
+
+  const rp = pos[TREE2.id];
+  branches.forEach(br => {
+    const bp = pos[br.id];
+    addLine(cx(rp), bot(rp), cx(bp), top(bp), 'lg3');
+    br.children.forEach(lf => {
+      const lp = pos[lf.id];
+      addLine(cx(bp), bot(bp), cx(lp), top(lp), 'lg4');
+    });
+  });
+})();
+
+// ─── NAV ──────────────────────────────────────────────────────
+const burger = document.getElementById('burger');
+const mob    = document.getElementById('mob');
+ 
+burger.addEventListener('click', () => {
+  burger.classList.toggle('open');
+  mob.classList.toggle('open');
+});
+mob.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  burger.classList.remove('open');
+  mob.classList.remove('open');
+}));
+ 
+const allNavLinks = document.querySelectorAll('#nav-links a, #mob a');
+allNavLinks.forEach(a => a.addEventListener('click', function() {
+  allNavLinks.forEach(l => l.classList.remove('active'));
+  document.querySelectorAll(`a[href="${this.getAttribute('href')}"]`).forEach(l => l.classList.add('active'));
+}));
+ 
+// ─── THEME TOGGLE ─────────────────────────────────────────────
+const root       = document.documentElement;
+const toggleBtn  = document.getElementById('toggle-btn');
+const toggleLabel= document.getElementById('toggle-label');
+ 
+// User override expires after 7 hours 15 minutes
+const OVERRIDE_DURATION = (7 * 60 + 15) * 60 * 1000;
+ 
+function setTheme(theme, save = false) {
+  root.setAttribute('data-theme', theme);
+  toggleLabel.textContent = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+  toggleBtn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+  if (save) {
+    try {
+      localStorage.setItem('bin-theme', theme);
+      localStorage.setItem('bin-theme-ts', Date.now().toString());
+    } catch(e) {}
+  }
+}
+ 
+// Returns saved theme if still within the 7h 15min window, else clears and returns null
+function getSavedTheme() {
+  try {
+    const saved = localStorage.getItem('bin-theme');
+    const ts    = localStorage.getItem('bin-theme-ts');
+    if (saved && ts) {
+      if (Date.now() - parseInt(ts, 10) < OVERRIDE_DURATION) return saved;
+      // Override has expired — clear it
+      localStorage.removeItem('bin-theme');
+      localStorage.removeItem('bin-theme-ts');
+    }
+  } catch(e) {}
+  return null;
+}
+ 
+// User manually clicks → save preference with timestamp
+toggleBtn.addEventListener('click', () => {
+  const current = root.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  setTheme(next, true);
+});
+ 
+// On load: use saved preference if still valid, else fall back to time-based
+function getTimeTheme() {
+  const h = new Date().getHours();
+  return (h >= 6 && h < 18) ? 'light' : 'dark';
+}
+ 
+const savedOnLoad = getSavedTheme();
+setTheme(savedOnLoad || getTimeTheme());
+ 
+// Re-check every minute — switches to time-based once override expires
+setInterval(() => {
+  if (!getSavedTheme()) setTheme(getTimeTheme());
+}, 60000);
+ 
+ 
+// Bin-logo
+const wrap = document.getElementById('binWrap');
+const page = document.getElementById('slidePage');
+let linkTimer = null;
+ 
+function openFolder() {
+  wrap.classList.add('open');
+  page.classList.add('visible');
+  linkTimer = setTimeout(() => {
+    window.open('https://git-binacc.github.io/bin/', '_blank');
+  }, 800);
+}
+ 
+function closeFolder() {
+  clearTimeout(linkTimer);
+  wrap.classList.remove('open');
+  page.classList.remove('visible');
+}
+ 
+wrap.addEventListener('click', () => {
+  wrap.classList.contains('open') ? closeFolder() : openFolder();
+});
+ 
+wrap.addEventListener('mouseleave', () => closeFolder());
+
+// For smooth Link effect
+// ─── ULTRA SMOOTH SCROLL ──────────────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    const href = this.getAttribute('href');
+    if (href === '#') return;
+    const target    = document.querySelector(href);
+    const scrollBox = document.querySelector('.scroll-body');
+    if (!target) return;
+    e.preventDefault();
+
+    const container = (scrollBox && scrollBox.contains(target)) ? scrollBox : document.documentElement;
+    const startY    = container.scrollTop;
+    const targetY   = target.getBoundingClientRect().top
+                      - container.getBoundingClientRect().top
+                      + container.scrollTop;
+    const diff      = targetY - startY;
+    const duration  = 1400; // ms — raise for slower, lower for faster
+    let   start     = null;
+
+    function easeOutQuint(t) {
+      return 1 - Math.pow(1 - t, 5);
+    }
+
+    function step(timestamp) {
+      if (!start) start = timestamp;
+      const elapsed  = timestamp - start;
+      const progress = Math.min(elapsed / duration, 1);
+      container.scrollTop = startY + diff * easeOutQuint(progress);
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  });
+});
+</script>
+</body>
+</html>
