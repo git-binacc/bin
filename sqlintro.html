@@ -102,6 +102,19 @@
   transform: translateX(3px);
 }
 
+/* ── RDBMS TABLES: stack vertically on mobile/tablet ── */
+@media (max-width: 700px) {
+  .rdbms-tables-wrap {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 1.6rem !important;
+  }
+  /* Remove the desktop vertical-offset on Table 2 */
+  .rdbms-tables-wrap .rdbms-table-block {
+    margin-top: 0 !important;
+  }
+}
+
 /* ── TAB ALIVE: shake once, then silent for 5s, repeat ── */
 @keyframes tabShake {
   0%    { transform: rotate(0deg); }
@@ -841,32 +854,53 @@
         <script>
         (function() {
           function drawTableConnector() {
-            const svg  = document.getElementById('tbl-connector');
-            const t2h  = document.getElementById('t2-id-header'); // LEFT table ID header
-            const t1h  = document.getElementById('t1-id-header'); // RIGHT table ID header
+            const svg = document.getElementById('tbl-connector');
+            const t2h = document.getElementById('t2-id-header'); // Table 2 ID header
+            const t1h = document.getElementById('t1-id-header'); // Table 1 ID header
             if (!svg || !t2h || !t1h) return;
 
             svg.querySelectorAll('path, circle').forEach(e => e.remove());
 
             const svgRect = svg.getBoundingClientRect();
-            const rL = t2h.getBoundingClientRect(); // left (lower) table ID header
-            const rR = t1h.getBoundingClientRect(); // right (upper) table ID header
+            const rL = t2h.getBoundingClientRect(); // Table 2
+            const rR = t1h.getBoundingClientRect(); // Table 1
 
-            // Dot 1: LEFT edge, mid-height of Table 1 (right/upper) ID header
-            const x1 = rR.left - svgRect.left;
-            const y1 = rR.top + rR.height / 2 - svgRect.top;
+            // Detect layout: if the two ID headers are within 80px vertically → side-by-side (row)
+            // Otherwise tables are stacked vertically (column / mobile)
+            const isRow = Math.abs(rL.top - rR.top) < 80;
 
-            // Dot 2: TOP edge, centre-width of Table 2 (left/lower) ID header
-            const x2 = rL.left + rL.width / 2 - svgRect.left;
-            const y2 = rL.top - svgRect.top;
+            let x1, y1, x2, y2, d;
 
-            // Elbow: left from T1 → go left past T2 → go down → enter top of T2
-            // L-shape: straight left from T1 left edge → straight down into T2 top centre
-            // xCorner stays at x2 so it's a clean right-angle outside the tables
-            const gap = 8;
-            const xCorner = x2;
+            if (isRow) {
+              // ── Desktop: Table 2 LEFT, Table 1 RIGHT ──
+              // Connect: left edge mid of T1 → top centre of T2 (L-shape)
+              x1 = rR.left - svgRect.left;
+              y1 = rR.top  + rR.height / 2 - svgRect.top;
+              x2 = rL.left + rL.width  / 2 - svgRect.left;
+              y2 = rL.top  - svgRect.top;
+              d  = `M${x1},${y1} L${x2},${y1} L${x2},${y2}`;
+            } else {
+              // ── Mobile/tablet: tables stacked vertically ──
+              // Whichever table is higher in the page is "top", the other is "bottom"
+              const topR  = rL.top < rR.top ? rL : rR; // topmost table's ID header
+              const botR  = rL.top < rR.top ? rR : rL; // bottom table's ID header
+              // Connect: bottom-centre of top table ID → top-centre of bottom table ID
+              x1 = topR.left + topR.width  / 2 - svgRect.left;
+              y1 = topR.bottom - svgRect.top;
+              x2 = botR.left  + botR.width  / 2 - svgRect.left;
+              y2 = botR.top   - svgRect.top;
+              if (Math.abs(x1 - x2) < 4) {
+                // Perfectly aligned — straight vertical line
+                d = `M${x1},${y1} L${x2},${y2}`;
+              } else {
+                // Slight offset — draw a centred elbow
+                const midY = (y1 + y2) / 2;
+                d = `M${x1},${y1} L${x1},${midY} L${x2},${midY} L${x2},${y2}`;
+              }
+            }
+
             const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            path.setAttribute('d', `M${x1},${y1} L${xCorner},${y1} L${xCorner},${y2}`);
+            path.setAttribute('d', d);
             path.setAttribute('stroke', 'var(--accent-border, #c8ff00)');
             path.setAttribute('stroke-width', '3');
             path.setAttribute('fill', 'none');
@@ -874,18 +908,14 @@
             path.setAttribute('opacity', '0.8');
             svg.appendChild(path);
 
-            // dot terminals — T1: left edge mid, T2: top centre
             function addDot(cx, cy) {
               const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-              c.setAttribute('cx', cx);
-              c.setAttribute('cy', cy);
-              c.setAttribute('r', '4');
-              c.setAttribute('fill', 'var(--accent, #c8ff00)');
-              c.setAttribute('opacity', '0.9');
+              c.setAttribute('cx', cx); c.setAttribute('cy', cy); c.setAttribute('r', '4');
+              c.setAttribute('fill', 'var(--accent, #c8ff00)'); c.setAttribute('opacity', '0.9');
               svg.appendChild(c);
             }
-            addDot(x1, y1);   // left edge of Table 1 ID header
-            addDot(x2, y2);   // top centre of Table 2 ID header
+            addDot(x1, y1);
+            addDot(x2, y2);
           }
 
           window.addEventListener('load', drawTableConnector);
