@@ -1497,7 +1497,11 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     if (!target) return;
     e.preventDefault();
 
-    const container = (scrollBox && scrollBox.contains(target)) ? scrollBox : document.documentElement;
+    // Only use scroll-body as container if it is actually scrollable
+    const scrollBoxActive = scrollBox &&
+      getComputedStyle(scrollBox).overflowY !== 'visible' &&
+      scrollBox.scrollHeight > scrollBox.clientHeight;
+    const container = (scrollBoxActive && scrollBox.contains(target)) ? scrollBox : document.documentElement;
     const startY    = container.scrollTop;
     const targetY   = target.getBoundingClientRect().top
                       - container.getBoundingClientRect().top
