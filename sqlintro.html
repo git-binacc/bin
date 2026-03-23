@@ -1497,31 +1497,55 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     if (!target) return;
     e.preventDefault();
 
-    // Only use scroll-body as container if it is actually scrollable
+    // Only use scroll-body as container if it is actually scrollable (desktop)
     const scrollBoxActive = scrollBox &&
       getComputedStyle(scrollBox).overflowY !== 'visible' &&
       scrollBox.scrollHeight > scrollBox.clientHeight;
-    const container = (scrollBoxActive && scrollBox.contains(target)) ? scrollBox : document.documentElement;
-    const startY    = container.scrollTop;
-    const targetY   = target.getBoundingClientRect().top
-                      - container.getBoundingClientRect().top
-                      + container.scrollTop;
-    const diff      = targetY - startY;
-    const duration  = 1400; // ms — raise for slower, lower for faster
-    let   start     = null;
 
-    function easeOutQuint(t) {
-      return 1 - Math.pow(1 - t, 5);
-    }
+    const navHeight = (document.querySelector('nav') || { offsetHeight: 0 }).offsetHeight;
 
-    function step(timestamp) {
-      if (!start) start = timestamp;
-      const elapsed  = timestamp - start;
-      const progress = Math.min(elapsed / duration, 1);
-      container.scrollTop = startY + diff * easeOutQuint(progress);
-      if (progress < 1) requestAnimationFrame(step);
+    if (scrollBoxActive && scrollBox.contains(target)) {
+      // ── Desktop: scroll inside .scroll-body ──
+      const startY  = scrollBox.scrollTop;
+      const targetY = target.getBoundingClientRect().top
+                      - scrollBox.getBoundingClientRect().top
+                      + scrollBox.scrollTop - navHeight;
+      const diff     = targetY - startY;
+      const duration = 1400;
+      let   start    = null;
+
+      function easeOutQuint(t) { return 1 - Math.pow(1 - t, 5); }
+
+      function step(timestamp) {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        scrollBox.scrollTop = startY + diff * easeOutQuint(progress);
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+
+    } else {
+      // ── Mobile/tablet: page itself scrolls ──
+      // window.scrollY is reliable across all browsers (incl. iOS Safari)
+      const startY  = window.scrollY;
+      const targetY = target.getBoundingClientRect().top + window.scrollY - navHeight;
+      const diff     = targetY - startY;
+      const duration = 1400;
+      let   start    = null;
+
+      function easeOutQuintM(t) { return 1 - Math.pow(1 - t, 5); }
+
+      function stepM(timestamp) {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        const y = startY + diff * easeOutQuintM(progress);
+        // Write to both for cross-browser support (Safari uses body, others use documentElement)
+        document.documentElement.scrollTop = y;
+        document.body.scrollTop = y;
+        if (progress < 1) requestAnimationFrame(stepM);
+      }
+      requestAnimationFrame(stepM);
     }
-    requestAnimationFrame(step);
   });
 });
 
