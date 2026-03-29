@@ -107,13 +107,8 @@
     text-align: center;
     opacity: 0;
     z-index: 3;
-    transition: opacity 0.9s cubic-bezier(0.4,0,0.2,1),
-                transform 0.9s cubic-bezier(0.34,1.56,0.64,1);
+    /* No CSS transition — JS drives opacity & transform directly from scroll */
     pointer-events: none;
-  }
-  .bin-phrase.phrase-visible {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
   }
   .bin-static {
     color: #ffffff;
@@ -297,7 +292,7 @@
 
   <!-- HERO -->
   <div style="position: relative; height: 5300px;" id="heroWrap">
-    <section class="hero" id="heroSection">
+    <section class="hero" id="heroSection" style="height:100vh; overflow:hidden;">
       <!-- Chrome group: fades out as one unit -->
       <div class="hero-chrome-wrap" id="heroChrome">
         <div class="eyebrow" id="heroEyebrow">Welcome to</div>
@@ -328,40 +323,258 @@
 
   <!-- TOPICS / STACK -->
   <div class="topics" id="stack">
-    <div class="topics-inner">
-      <div class="section-label">My Exploration Stuff</div>
-      <div class="tags-wrap">
-        <span class="tag">
-          <a href="sqlbasics.html">SQL</a>
-        </span>
-        <span class="tag">Python</span>
-        <span class="tag">Mathematics</span>
-        <span class="tag">Statistics</span>
-        <span class="tag">Data Analytics</span>
-        <span class="tag">Data Visualisation</span>
-        <span class="tag">Machine Learning</span>
-        <span class="tag">Deep Learning</span>
-        <span class="tag">Transformers</span>
-        <span class="tag">NLP</span>
-        <span class="tag">LLMs</span>
-        <span class="tag">Generative AI</span>
-        <span class="tag">Computer Vision</span>
-        <span class="tag">Agentic AI</span>
-        <span class="tag">Deployment &amp; MLops</span>
-        <span class="tag">Research</span>
-        <!-- <span class="tag">Physical AI</span>
-        <span class="tag-soon">Conscious AI</span>
-        <span class="tag-soon">Neural Networks</span>
-        <span class="tag-soon">Linear Algebra</span>
-        <span class="tag-soon">Calculus</span>
-        <span class="tag-soon">Statistics</span>
-        <span class="tag-soon">Transformer Models</span>
-        <span class="tag-soon">Computer Vision</span>
-        <span class="tag-soon">NLP</span>
-        <span class="tag-soon">Reinforcement Learning</span> -->
+    <div class="topics-inner explore-wrap">
+
+      <div class="explore-title" id="exploreTitle">My Exploration Stuff</div>
+
+      <div class="explore-grid" id="exploreGrid">
+
+        <a class="explore-card" href="sqlbasics.html">
+          <div class="ec-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/azuresqldatabase/azuresqldatabase-original.svg" alt="SQL"></div>
+          <span>SQL</span>
+        </a>
+
+        <div class="explore-card">
+          <div class="ec-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python"></div>
+          <span>Python</span>
+        </div>
+
+        <div class="explore-card">
+          <div class="ec-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+              <text x="2" y="50" font-size="48" fill="#00d4ff" font-family="Georgia,serif" font-style="italic">∑</text>
+            </svg>
+          </div>
+          <span>Mathematics</span>
+        </div>
+
+        <div class="explore-card">
+          <div class="ec-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+              <polyline points="4,52 18,28 30,40 44,14 60,22" stroke="#00d4ff" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span>Statistics</span>
+        </div>
+
+        <div class="explore-card">
+          <div class="ec-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/anaconda/anaconda-original.svg" alt="Data Analytics"></div>
+          <span>Data Analytics</span>
+        </div>
+
+        <div class="explore-card">
+          <div class="ec-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/matplotlib/matplotlib-original.svg" alt="Data Visualisation"></div>
+          <span>Data Visualisation</span>
+        </div>
+
+        <div class="explore-card">
+          <div class="ec-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/scikitlearn/scikitlearn-original.svg" alt="Machine Learning"></div>
+          <span>Machine Learning</span>
+        </div>
+
+        <div class="explore-card">
+          <div class="ec-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg" alt="Deep Learning"></div>
+          <span>Deep Learning</span>
+        </div>
+
+        <div class="explore-card">
+          <div class="ec-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pytorch/pytorch-original.svg" alt="Transformers"></div>
+          <span>Transformers</span>
+        </div>
+
+        <div class="explore-card">
+          <div class="ec-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+              <ellipse cx="32" cy="32" rx="26" ry="13" stroke="#00d4ff" stroke-width="3.5"/>
+              <line x1="6" y1="32" x2="58" y2="32" stroke="#00d4ff" stroke-width="3.5"/>
+              <ellipse cx="32" cy="32" rx="12" ry="26" stroke="#00d4ff" stroke-width="3.5"/>
+            </svg>
+          </div>
+          <span>NLP</span>
+        </div>
+
+        <div class="explore-card">
+          <div class="ec-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+              <rect x="8" y="20" width="48" height="28" rx="6" stroke="#00d4ff" stroke-width="3.5"/>
+              <circle cx="20" cy="34" r="4" fill="#00d4ff"/>
+              <circle cx="32" cy="34" r="4" fill="#00d4ff"/>
+              <circle cx="44" cy="34" r="4" fill="#00d4ff"/>
+              <path d="M20 20V14Q20 8 26 8H38Q44 8 44 14V20" stroke="#00d4ff" stroke-width="3.5" fill="none"/>
+            </svg>
+          </div>
+          <span>LLMs</span>
+        </div>
+
+        <div class="explore-card">
+          <div class="ec-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+              <circle cx="32" cy="32" r="10" fill="#00d4ff" opacity="0.15"/>
+              <circle cx="32" cy="32" r="10" stroke="#00d4ff" stroke-width="3"/>
+              <path d="M32 22Q50 14 58 32Q50 50 32 42Q14 50 6 32Q14 14 32 22Z" stroke="#00d4ff" stroke-width="2.5" fill="none"/>
+            </svg>
+          </div>
+          <span>Generative AI</span>
+        </div>
+
+        <div class="explore-card">
+          <div class="ec-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/opencv/opencv-original.svg" alt="Computer Vision"></div>
+          <span>Computer Vision</span>
+        </div>
+
+        <div class="explore-card">
+          <div class="ec-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+              <circle cx="32" cy="16" r="7" stroke="#00d4ff" stroke-width="3"/>
+              <circle cx="12" cy="50" r="7" stroke="#00d4ff" stroke-width="3"/>
+              <circle cx="52" cy="50" r="7" stroke="#00d4ff" stroke-width="3"/>
+              <line x1="32" y1="23" x2="15" y2="43" stroke="#00d4ff" stroke-width="2.5"/>
+              <line x1="32" y1="23" x2="49" y2="43" stroke="#00d4ff" stroke-width="2.5"/>
+              <line x1="19" y1="50" x2="45" y2="50" stroke="#00d4ff" stroke-width="2.5"/>
+            </svg>
+          </div>
+          <span>Agentic AI</span>
+        </div>
+
+        <div class="explore-card">
+          <div class="ec-icon"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" alt="MLops"></div>
+          <span>Deployment &amp; MLops</span>
+        </div>
+
+        <div class="explore-card">
+          <div class="ec-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+              <circle cx="32" cy="24" r="12" stroke="#00d4ff" stroke-width="3.5"/>
+              <line x1="20" y1="56" x2="44" y2="56" stroke="#00d4ff" stroke-width="3.5" stroke-linecap="round"/>
+              <line x1="32" y1="36" x2="32" y2="56" stroke="#00d4ff" stroke-width="3.5" stroke-linecap="round"/>
+              <line x1="25" y1="20" x2="39" y2="20" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="32" y1="13" x2="32" y2="27" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span>Research</span>
+        </div>
+
       </div>
     </div>
   </div>
+
+  <style>
+    .explore-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Title — fades up and out when grid enters view */
+    .explore-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+      font-weight: 800;
+      color: #00d4ff;
+      letter-spacing: 0.06em;
+      text-align: center;
+      margin-bottom: 2rem;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .explore-title.hide {
+      opacity: 0;
+      transform: translateY(-14px);
+      pointer-events: none;
+    }
+
+    /* Grid */
+    .explore-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+      gap: 1rem;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    /* Card */
+    .explore-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 1.15rem 0.6rem 1rem;
+      border-radius: 14px;
+      background: rgba(0, 8, 24, 0.70);
+      border: 1.5px solid rgba(0, 212, 255, 0.16);
+      color: #7dd8ef;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.67rem;
+      letter-spacing: 0.03em;
+      text-align: center;
+      line-height: 1.4;
+      text-decoration: none;
+      cursor: default;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.30);
+      /* reveal start state */
+      opacity: 0;
+      transform: scale(0.80);
+      transition: opacity 0.42s ease, transform 0.42s cubic-bezier(0.34,1.56,0.64,1),
+                  border-color 0.28s, box-shadow 0.28s, background 0.28s, color 0.28s;
+    }
+    .explore-card.revealed {
+      opacity: 1;
+      transform: scale(1);
+    }
+    a.explore-card { cursor: pointer; }
+    .explore-card:hover {
+      background: rgba(0, 212, 255, 0.09);
+      border-color: #00d4ff;
+      box-shadow: 0 0 20px rgba(0,212,255,0.42), 0 0 48px rgba(0,212,255,0.10);
+      color: #ffffff;
+      transform: scale(1.07) translateY(-3px);
+    }
+
+    /* Icon box */
+    .ec-icon {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.22);
+      transition: transform 0.32s ease, box-shadow 0.32s ease;
+    }
+    .explore-card:hover .ec-icon {
+      transform: rotate(7deg) scale(1.14);
+      box-shadow: 0 6px 18px rgba(0,212,255,0.20);
+    }
+    .ec-icon img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+    }
+  </style>
+
+  <script>
+  (function () {
+    const title = document.getElementById('exploreTitle');
+    const grid  = document.getElementById('exploreGrid');
+    const cards = Array.from(grid.querySelectorAll('.explore-card'));
+
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          title.classList.add('hide');
+          cards.forEach((card, i) => {
+            setTimeout(() => card.classList.add('revealed'), i * 52);
+          });
+          obs.disconnect();
+        }
+      });
+    }, { threshold: 0.15 });
+
+    obs.observe(grid);
+  })();
+  </script>
 
   <!-- AXIOMS -->
   <section class="section axioms-hidden" id="axiomsSection">
@@ -552,7 +765,7 @@
   wrap.addEventListener('mouseleave', () => closeFolder());
 
 
-  /* ---- HERO FIXED → RELEASE AT 3000px ---- */
+  /* ---- HERO FIXED → RELEASE AT 5200px ---- */
   (function () {
     const hero          = document.getElementById('heroSection');
     const binPhrase     = document.getElementById('binPhrase');
@@ -560,11 +773,9 @@
     const axiomsSection = document.getElementById('axiomsSection');
     const THRESHOLD     = 5200;
 
-    /* Single chrome wrapper + scroll hint */
-    const chromeWrap   = document.getElementById('heroChrome');
-    const scrollHint   = document.getElementById('heroScrollHint');
+    const chromeWrap = document.getElementById('heroChrome');
+    const scrollHint = document.getElementById('heroScrollHint');
 
-    /* Middle words with their colors */
     const words = [
       { text: 'Integration', color: '#00d4ff' },
       { text: 'Inference',   color: '#7c3aed' },
@@ -572,7 +783,6 @@
       { text: 'Impulse',     color: '#c8ff00' }
     ];
 
-    /* Word-swap every 1000px starting at 400px */
     const stages = [
       { min: 0,    max: 399  },
       { min: 400,  max: 1399 },
@@ -581,28 +791,52 @@
       { min: 3400, max: Infinity }
     ];
 
-    /* Crossfade zone: 450px → 550px (100px gap after chrome at 400px) */
-    const FADE_START = 450;
-    const FADE_END   = 550;
+    /* Wider crossfade zone: 350px → 600px for reliability at any speed */
+    const FADE_START = 350;
+    const FADE_END   = 600;
 
-    let currentStage = 0;
-    let animating    = false;
+    const PHRASE_FADE_START = 4400;
+    const PHRASE_FADE_END   = 4650;
+
+    let currentStage   = 0;
+    let animating      = false;
+    let rafPending     = false;
 
     function getStageIndex(sy) {
       return stages.findIndex(s => sy >= s.min && sy <= s.max);
     }
 
-    function animateWord(newWord, newColor, direction) {
-      if (animating || !binWordEl) return;
-      animating = true;
+    /* ── Force-set word instantly (no animation) ── */
+    function setWordImmediate(wordIdx) {
+      binWordEl.classList.remove(
+        'slide-out-up', 'slide-out-down', 'slide-in-down', 'slide-in-up'
+      );
+      animating = false;
+      if (wordIdx >= 0 && wordIdx < words.length) {
+        binWordEl.textContent = words[wordIdx].text;
+        binWordEl.style.color = words[wordIdx].color;
+      }
+    }
 
+    /* ── Animated word swap — skips animation if already animating (fast scroll) ── */
+    function animateWord(wordIdx, direction) {
+      if (!binWordEl || wordIdx < 0 || wordIdx >= words.length) return;
+      const w = words[wordIdx];
+
+      /* Fast scroll: skip animation, snap immediately */
+      if (animating) {
+        setWordImmediate(wordIdx);
+        return;
+      }
+
+      animating = true;
       const outClass = direction === 'forward' ? 'slide-out-up'  : 'slide-out-down';
       const inClass  = direction === 'forward' ? 'slide-in-down' : 'slide-in-up';
 
       binWordEl.classList.add(outClass);
       setTimeout(() => {
-        binWordEl.textContent  = newWord;
-        binWordEl.style.color  = newColor;
+        binWordEl.textContent = w.text;
+        binWordEl.style.color = w.color;
         binWordEl.classList.remove(outClass);
         binWordEl.classList.add(inClass);
         binWordEl.addEventListener('animationend', () => {
@@ -612,70 +846,79 @@
       }, 340);
     }
 
+    /* ── Single source of truth: compute phrase opacity directly from scroll ── */
+    function getPhraseOpacity(sy) {
+      if (sy < FADE_START) return 0;
+      if (sy <= FADE_END)  return (sy - FADE_START) / (FADE_END - FADE_START);
+      if (sy < PHRASE_FADE_START) return 1;
+      if (sy < PHRASE_FADE_END)   return 1 - (sy - PHRASE_FADE_START) / (PHRASE_FADE_END - PHRASE_FADE_START);
+      return 0;
+    }
+
+    /* ── Apply phrase state purely via inline styles — no CSS class transitions ── */
+    function applyPhrase(sy) {
+      const op = getPhraseOpacity(sy);
+      const scale = sy < FADE_END
+        ? 0.7 + 0.3 * Math.min(1, (sy - FADE_START) / (FADE_END - FADE_START))
+        : 1;
+      binPhrase.style.transition = 'none';
+      binPhrase.style.opacity    = String(Math.max(0, op));
+      binPhrase.style.transform  = `translate(-50%, -50%) scale(${scale})`;
+      /* keep pointer-events off when invisible */
+      binPhrase.style.pointerEvents = op > 0 ? 'auto' : 'none';
+    }
+
     function onScroll() {
       const sy  = window.scrollY;
       const idx = getStageIndex(sy);
 
-      /* ── Smooth crossfade in the 350–450px zone ── */
-      if (sy >= FADE_START && sy <= FADE_END) {
+      /* ── Chrome crossfade (purely inline, no CSS class transitions) ── */
+      if (sy < FADE_START) {
+        chromeWrap.style.transition  = 'none';
+        chromeWrap.style.opacity     = '1';
+        chromeWrap.style.transform   = 'translateY(0)';
+        chromeWrap.style.pointerEvents = '';
+        chromeWrap.classList.remove('fade-out');
+        if (scrollHint) { scrollHint.style.transition = 'none'; scrollHint.style.opacity = '1'; scrollHint.style.pointerEvents = ''; }
+
+      } else if (sy <= FADE_END) {
         const t = (sy - FADE_START) / (FADE_END - FADE_START);
-        chromeWrap.style.transition = 'none';
-        chromeWrap.style.opacity    = String(1 - t);
-        chromeWrap.style.transform  = `translateY(${-18 * t}px)`;
+        chromeWrap.style.transition  = 'none';
+        chromeWrap.style.opacity     = String(1 - t);
+        chromeWrap.style.transform   = `translateY(${-18 * t}px)`;
         chromeWrap.style.pointerEvents = t > 0.5 ? 'none' : '';
         if (scrollHint) { scrollHint.style.transition = 'none'; scrollHint.style.opacity = String(1 - t); }
-        binPhrase.style.transition  = 'none';
-        binPhrase.style.opacity     = String(t);
-        binPhrase.style.transform   = `translate(-50%, -50%) scale(${0.7 + 0.3 * t})`;
-        binPhrase.classList.remove('phrase-visible');
-
-      } else if (sy > FADE_END) {
-        chromeWrap.style.transition  = '';
-        chromeWrap.style.opacity     = '';
-        chromeWrap.style.transform   = '';
-        chromeWrap.classList.add('fade-out');
-        if (scrollHint) { scrollHint.style.transition = ''; scrollHint.style.opacity = '0'; scrollHint.style.pointerEvents = 'none'; }
-        binPhrase.style.transition   = '';
-        binPhrase.style.opacity      = '';
-        binPhrase.style.transform    = '';
-        binPhrase.classList.add('phrase-visible');
 
       } else {
-        chromeWrap.style.transition  = '';
-        chromeWrap.style.opacity     = '';
-        chromeWrap.style.transform   = '';
-        chromeWrap.classList.remove('fade-out');
-        if (scrollHint) { scrollHint.style.transition = ''; scrollHint.style.opacity = ''; scrollHint.style.pointerEvents = ''; }
-        binPhrase.style.transition   = '';
-        binPhrase.style.opacity      = '';
-        binPhrase.style.transform    = '';
-        binPhrase.classList.remove('phrase-visible');
+        chromeWrap.style.transition  = 'none';
+        chromeWrap.style.opacity     = '0';
+        chromeWrap.style.transform   = 'translateY(-18px)';
+        chromeWrap.style.pointerEvents = 'none';
+        chromeWrap.classList.add('fade-out');
+        if (scrollHint) { scrollHint.style.transition = 'none'; scrollHint.style.opacity = '0'; scrollHint.style.pointerEvents = 'none'; }
       }
+
+      /* ── Phrase: always driven by scroll position, never by CSS transition ── */
+      applyPhrase(sy);
 
       /* ── Word swap on stage change ── */
       if (idx !== -1 && idx !== currentStage) {
         const dir = idx > currentStage ? 'forward' : 'backward';
         if (idx >= 1) {
-          const w = words[idx - 1];
-          animateWord(w.text, w.color, dir);
+          /* If jumped multiple stages at once, snap immediately */
+          if (Math.abs(idx - currentStage) > 1) {
+            setWordImmediate(idx - 1);
+          } else {
+            animateWord(idx - 1, dir);
+          }
+        } else {
+          /* Scrolled back to stage 0 — reset to first word */
+          setWordImmediate(0);
         }
         currentStage = idx;
       }
 
-      /* ── Fade Brain phrase out as hero approaches release (4100–4350px) ── */
-      const PHRASE_FADE_START = 4400;
-      const PHRASE_FADE_END   = 4650;
-      if (sy >= PHRASE_FADE_START && sy < PHRASE_FADE_END) {
-        const pt = (sy - PHRASE_FADE_START) / (PHRASE_FADE_END - PHRASE_FADE_START);
-        binPhrase.style.transition = 'none';
-        binPhrase.style.opacity    = String(Math.max(0, 1 - pt));
-      } else if (sy >= PHRASE_FADE_END) {
-        binPhrase.style.transition = '';
-        binPhrase.style.opacity    = '0';
-        binPhrase.classList.remove('phrase-visible');
-      }
-
-      /* ── Reveal axioms only after Brain phrase is fully gone (4750px+) ── */
+      /* ── Axioms ── */
       if (sy >= 4750) {
         axiomsSection.classList.remove('axioms-hidden');
         axiomsSection.classList.add('axioms-visible');
@@ -698,13 +941,25 @@
       }
     }
 
+    /* ── rAF debounce: one paint per frame max ── */
+    function onScrollRaw() {
+      if (!rafPending) {
+        rafPending = true;
+        requestAnimationFrame(() => {
+          onScroll();
+          rafPending = false;
+        });
+      }
+    }
+
     /* Set initial state */
     hero.style.position = 'fixed';
     hero.style.top      = '0';
     hero.style.left     = '0';
     hero.style.width    = '100%';
+    applyPhrase(0);
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', onScrollRaw, { passive: true });
   })();
 
   /* ---- NAV ACTIVE LINK ---- */
