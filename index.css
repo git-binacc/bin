@@ -219,10 +219,13 @@
   }
 
   .hero-sub {
-    font-family: 'Crimson Pro', serif;
+    font-family: 'Lora', Georgia, serif;
+    font-size: clamp(0.82rem, 1.4vw, 0.875rem);
+    line-height: 2;
+    letter-spacing: 0.01em;
+    color: #f0f0f0;
     font-style: italic;
-    font-size: clamp(1.05rem, 2.2vw, 1.45rem);
-    color: var(--muted);
+    font-weight: 500;
     max-width: 580px;
     line-height: 1.75;
     margin-bottom: 2.5rem;
@@ -441,6 +444,7 @@
     padding: var(--section-pad-y) var(--section-pad-x);
     background: var(--surface);
     position: relative;
+    min-height: 500px;
   }
 
   .topics::before {
@@ -454,6 +458,8 @@
   .topics-inner {
     max-width: var(--max-width);
     margin: 0 auto;
+    width: 100%;
+    text-align: center;
   }
 
   .tags-wrap {
@@ -461,6 +467,7 @@
     flex-wrap: wrap;
     gap: 0.75rem;
     margin-top: 2.5rem;
+    justify-content: center;
   }
 
   .tag {
