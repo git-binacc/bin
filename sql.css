@@ -69,7 +69,7 @@
 
   --scrollbar:      rgba(29,78,216,0.3);
 
-  --canvas-opacity: 0;
+  --canvas-opacity: 1;
 }
 
 /* ══════════════════════════════════
@@ -85,6 +85,9 @@ body {
   /* cursor: ; */
   transition: background 0.45s ease, color 0.45s ease;
 }
+[data-theme="light"] body {
+  background: transparent;
+}
 
 /* ── Canvas / Grain ── */
 #space {
@@ -96,7 +99,7 @@ body {
   transition: opacity 0.45s ease;
 }
 
-/* Light-mode warm background texture */
+/* Light-mode warm background texture — disabled, sky canvas handles this now */
 body::before {
   content: '';
   position: fixed;
@@ -110,7 +113,7 @@ body::before {
     radial-gradient(ellipse 60% 50% at 85% 80%, rgba(224,242,254,0.4) 0%, transparent 70%),
     radial-gradient(ellipse 50% 40% at 50% 50%, rgba(238,242,255,0.3) 0%, transparent 70%);
 }
-[data-theme="light"] body::before { opacity: 1; }
+[data-theme="light"] body::before { opacity: 0; }
 
 body::after {
   content: '';
@@ -878,6 +881,9 @@ code{
 }
 .or{
   text-align: center;
+}
+.small-or{
+  text-indent: 175px;
 }
 /*  RDBMS TABLES */
     .rdbms-tables-wrap {
