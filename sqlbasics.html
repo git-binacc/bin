@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>sql/basics</title>
+<title>bin/sql » basics</title>
 <link rel="icon" type="image/png" href="data:image/png">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="sql.css"/>
@@ -514,19 +514,19 @@
           SQL <span class="sb-pill-tag">DB</span>
         </span>
         <div class="topics">
-          <div class="topic-item topic-item-active" onclick="location.href='sqlbasics.html'" style="cursor:pointer;">
-            <a class="topic-head" href="sqlbasics.html">Basics</a>
+          <div class="topic-item topic-item-active" onclick="location.href='sqlintro.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqlintro.html">Basics</a>
           </div>
-          <div class="topic-item" onclick="location.href='sqldt.html'" style="cursor:pointer;">
-            <a class="topic-head" href="sqldt.html">Datatypes</a>
+          <div class="topic-item" onclick="location.href='sqldatatypes.html'" style="cursor:pointer;">
+            <a class="topic-head" href="sqldatatypes.html">Datatypes</a>
           </div>
           <div class="topic-item" onclick="location.href='sqlconst.html'" style="cursor:pointer;">
             <a class="topic-head" href="sqlconst.html">Constraints</a>
           </div>
-          <!-- <div class="topic-item" onclick="location.href='sqloperators.html'" style="cursor:pointer;">
+          <div class="topic-item" onclick="location.href='sqloperators.html'" style="cursor:pointer;">
             <a class="topic-head" href="sqloperators.html">Operators</a>
           </div>
-          <div class="topic-item" onclick="location.href='sqlfunctions.html'" style="cursor:pointer;">
+          <!-- <div class="topic-item" onclick="location.href='sqlfunctions.html'" style="cursor:pointer;">
             <a class="topic-head" href="sqlfunctions.html">Functions</a>
           </div>
           <div class="topic-item" onclick="location.href='db.html'" style="cursor:pointer;">
@@ -605,16 +605,16 @@
       <div class="topic-item topic-item-active" onclick="location.href='sqlintro.html'" style="cursor:pointer;">
         <a class="topic-head" href="sqlintro.html">Basics</a>
       </div>
-      <div class="topic-item" onclick="location.href='sqldt.html'" style="cursor:pointer;">
-        <a class="topic-head" href="sqldt.html">Datatypes</a>
+      <div class="topic-item" onclick="location.href='sqldatatypes.html'" style="cursor:pointer;">
+        <a class="topic-head" href="sqldatatypes.html">Datatypes</a>
       </div>
       <div class="topic-item" onclick="location.href='sqlconst.html'" style="cursor:pointer;">
         <a class="topic-head" href="sqlconst.html">Constraints</a>
       </div>
-      <!-- <div class="topic-item" onclick="location.href='sqloperators.html'" style="cursor:pointer;">
+      <div class="topic-item" onclick="location.href='sqloperators.html'" style="cursor:pointer;">
         <a class="topic-head" href="sqloperators.html">Operators</a>
       </div>
-      <div class="topic-item" onclick="location.href='sqlfunctions.html'" style="cursor:pointer;">
+      <!-- <div class="topic-item" onclick="location.href='sqlfunctions.html'" style="cursor:pointer;">
         <a class="topic-head" href="sqlfunctions.html">Functions</a>
       </div>
       <div class="topic-item" onclick="location.href='db.html'" style="cursor:pointer;">
@@ -698,7 +698,7 @@
 
 <script>
 // ═══════════════════════════════════════════════════════════════
-//  COSMIC VOID — Canvas Engine
+//  DYNAMIC SKY ENGINE — day/night + weather-aware
 // ═══════════════════════════════════════════════════════════════
 const CV = document.getElementById('space');
 const CX = CV.getContext('2d');
@@ -706,7 +706,17 @@ let W, H;
 const resize = () => { W = CV.width = innerWidth; H = CV.height = innerHeight; };
 resize();
 addEventListener('resize', resize);
- 
+
+// ── Sky state ────────────────────────────────────────────────
+const SKY = {
+  phase:      'night',   // 'morning' | 'day' | 'evening' | 'night'
+  isOvercast: false,
+  lat:        13.6288,
+  lon:        79.4192,
+  locName:    'Tirupati District',
+};
+
+// ── Stars (dark mode / night) ────────────────────────────────
 const STARS = Array.from({length:340}, () => ({
   x: Math.random(), y: Math.random(),
   r: Math.random() * 1.35 + 0.08,
@@ -721,66 +731,203 @@ const FEATURE_STARS = Array.from({length:12}, () => ({
   tw: Math.random() * Math.PI * 2,
   ts: 0.002 + Math.random() * 0.008,
 }));
- 
-function drawStars(t) {
-  for (const s of STARS) {
-    const a = s.a * (0.62 + 0.38 * Math.sin(s.tw + t * s.ts));
-    CX.beginPath();
-    CX.arc(s.x * W, s.y * H, s.r, 0, 6.283);
-    CX.fillStyle = `rgba(218,225,255,${a.toFixed(2)})`;
-    CX.fill();
-  }
-  for (const s of FEATURE_STARS) {
-    const a = s.a * (0.7 + 0.3 * Math.sin(s.tw + t * s.ts));
-    const sx = s.x * W, sy = s.y * H;
-    CX.strokeStyle = `rgba(255,255,255,${(a*0.35).toFixed(2)})`;
-    CX.lineWidth = 0.5;
-    CX.beginPath(); CX.moveTo(sx - s.r*4, sy); CX.lineTo(sx + s.r*4, sy); CX.stroke();
-    CX.beginPath(); CX.moveTo(sx, sy - s.r*4); CX.lineTo(sx, sy + s.r*4); CX.stroke();
-    CX.beginPath();
-    CX.arc(sx, sy, s.r, 0, 6.283);
-    CX.fillStyle = `rgba(255,252,240,${a.toFixed(2)})`;
-    CX.fill();
-  }
+
+// ── Clouds (light mode) ──────────────────────────────────────
+const CLOUDS_BIG = Array.from({length:6}, (_, i) => ({
+  x: i * 0.20 + Math.random() * 0.1,
+  y: 0.06 + Math.random() * 0.38,
+  s: 0.65 + Math.random() * 0.55,
+  sp: 0.000050 + Math.random() * 0.000060,
+  a: 0.52 + Math.random() * 0.32,
+}));
+const CLOUDS_WISP = Array.from({length:5}, (_, i) => ({
+  x: i * 0.24 + Math.random() * 0.12,
+  y: 0.04 + Math.random() * 0.30,
+  s: 0.35 + Math.random() * 0.30,
+  sp: 0.000040 + Math.random() * 0.000050,
+  a: 0.25 + Math.random() * 0.20,
+}));
+
+function drawCloud(cx, x, y, scale, alpha, r, g, b) {
+  cx.save();
+  cx.globalAlpha = alpha;
+  cx.fillStyle = `rgb(${r},${g},${b})`;
+  const s = scale;
+  cx.beginPath();
+  cx.arc(x,        y,       18*s, 0, Math.PI*2);
+  cx.arc(x+22*s,   y- 8*s, 24*s, 0, Math.PI*2);
+  cx.arc(x+48*s,   y- 4*s, 20*s, 0, Math.PI*2);
+  cx.arc(x+66*s,   y+ 4*s, 16*s, 0, Math.PI*2);
+  cx.arc(x+28*s,   y+10*s, 18*s, 0, Math.PI*2);
+  cx.fill();
+  cx.restore();
 }
- 
+
+// ── Nebulas (night only) ─────────────────────────────────────
 function drawNebulas() {
   const NB = [
-    [0.12, 0.22, 0.38, 22,  42, 145, 0.072],
-    [0.82, 0.58, 0.30, 82,  18, 118, 0.058],
-    [0.50, 0.90, 0.44, 18,  78, 125, 0.052],
-    [0.62, 0.10, 0.26, 122, 58,  18, 0.038],
-    [0.28, 0.72, 0.22, 40,  95, 160, 0.034],
+    [0.12,0.22,0.38, 22, 42,145,0.072],
+    [0.82,0.58,0.30, 82, 18,118,0.058],
+    [0.50,0.90,0.44, 18, 78,125,0.052],
+    [0.62,0.10,0.26,122, 58, 18,0.038],
+    [0.28,0.72,0.22, 40, 95,160,0.034],
   ];
   for (const [fx,fy,fr,r,g,b,a] of NB) {
-    const grd = CX.createRadialGradient(fx*W, fy*H, 0, fx*W, fy*H, fr*Math.max(W,H));
+    const grd = CX.createRadialGradient(fx*W,fy*H,0,fx*W,fy*H,fr*Math.max(W,H));
     grd.addColorStop(0, `rgba(${r},${g},${b},${a})`);
     grd.addColorStop(1, 'rgba(0,0,0,0)');
     CX.fillStyle = grd;
-    CX.fillRect(0, 0, W, H);
+    CX.fillRect(0,0,W,H);
   }
 }
- 
 function drawMilkyWay() {
-  const g = CX.createLinearGradient(0, H*0.82, W, H*0.05);
-  g.addColorStop(0,    'rgba(0,0,0,0)');
-  g.addColorStop(0.22, 'rgba(125,138,192,0.018)');
-  g.addColorStop(0.50, 'rgba(168,175,218,0.038)');
-  g.addColorStop(0.78, 'rgba(125,138,192,0.018)');
-  g.addColorStop(1,    'rgba(0,0,0,0)');
-  CX.fillStyle = g;
-  CX.fillRect(0, 0, W, H);
+  const g = CX.createLinearGradient(0,H*0.82,W,H*0.05);
+  g.addColorStop(0,   'rgba(0,0,0,0)');
+  g.addColorStop(0.22,'rgba(125,138,192,0.018)');
+  g.addColorStop(0.50,'rgba(168,175,218,0.038)');
+  g.addColorStop(0.78,'rgba(125,138,192,0.018)');
+  g.addColorStop(1,   'rgba(0,0,0,0)');
+  CX.fillStyle = g; CX.fillRect(0,0,W,H);
 }
- 
-function draw(t) {
-  CX.fillStyle = '#020205';
-  CX.fillRect(0, 0, W, H);
-  drawNebulas();
-  drawMilkyWay();
-  drawStars(t);
-  requestAnimationFrame(draw);
+function drawStars(t) {
+  for (const s of STARS) {
+    const a = s.a * (0.62 + 0.38 * Math.sin(s.tw + t * s.ts));
+    CX.beginPath(); CX.arc(s.x*W, s.y*H, s.r, 0, 6.283);
+    CX.fillStyle = `rgba(218,225,255,${a.toFixed(2)})`; CX.fill();
+  }
+  for (const s of FEATURE_STARS) {
+    const a = s.a * (0.7 + 0.3 * Math.sin(s.tw + t * s.ts));
+    const sx = s.x*W, sy = s.y*H;
+    CX.strokeStyle = `rgba(255,255,255,${(a*0.35).toFixed(2)})`;
+    CX.lineWidth = 0.5;
+    CX.beginPath(); CX.moveTo(sx-s.r*4,sy); CX.lineTo(sx+s.r*4,sy); CX.stroke();
+    CX.beginPath(); CX.moveTo(sx,sy-s.r*4); CX.lineTo(sx,sy+s.r*4); CX.stroke();
+    CX.beginPath(); CX.arc(sx,sy,s.r,0,6.283);
+    CX.fillStyle = `rgba(255,252,240,${a.toFixed(2)})`; CX.fill();
+  }
+}
+
+// ── Sky gradient per phase ────────────────────────────────────
+function applySkyGradient(phase, isOvercast) {
+  let stops;
+  if (phase === 'morning') stops = [
+    [0,    '#1a2a50'], [0.18,'#7b3a20'],
+    [0.42, '#d4622a'], [0.68,'#f0a060'], [1,'#fcd8a0'],
+  ];
+  else if (phase === 'evening') stops = [
+    [0,    '#1e2d55'], [0.22,'#833520'],
+    [0.50, '#cc5e28'], [0.72,'#e89858'], [1,'#f8d09a'],
+  ];
+  else if (phase === 'night') stops = [
+    [0,'#020208'], [0.5,'#050a18'], [1,'#0a1228'],
+  ];
+  else if (isOvercast) stops = [
+    [0,'#b0c4d8'], [0.5,'#ccdae8'], [1,'#e4eef5'],
+  ];
+  else stops = [
+    [0,'#2e90d8'], [0.45,'#6dbcf2'], [1,'#aedcf8'],
+  ];
+  const g = CX.createLinearGradient(0,0,0,H);
+  stops.forEach(([p,c]) => g.addColorStop(p,c));
+  CX.fillStyle = g; CX.fillRect(0,0,W,H);
+}
+
+// ── Main draw loop ────────────────────────────────────────────
+let _t = 0;
+function draw() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+  // In dark theme → always use full night starfield
+  if (isDark) {
+    CX.fillStyle = '#020205'; CX.fillRect(0,0,W,H);
+    drawNebulas(); drawMilkyWay(); drawStars(_t);
+    _t++; requestAnimationFrame(draw); return;
+  }
+
+  // Light theme → dynamic sky
+  const phase = SKY.phase;
+  applySkyGradient(phase, SKY.isOvercast);
+
+  if (phase === 'night') {
+    drawNebulas(); drawMilkyWay(); drawStars(_t);
+    _t++; requestAnimationFrame(draw); return;
+  }
+
+  if (phase === 'morning' || phase === 'evening') {
+    // Horizon glow (no disc)
+    const gx = phase === 'morning' ? W*0.30 : W*0.68;
+    const sg = CX.createRadialGradient(gx,H*0.80,0,gx,H*0.80,W*0.55);
+    sg.addColorStop(0,   'rgba(255,200,80,0.40)');
+    sg.addColorStop(0.4, 'rgba(255,140,40,0.14)');
+    sg.addColorStop(1,   'rgba(255,100,20,0)');
+    CX.fillStyle = sg; CX.fillRect(0,0,W,H);
+    // Warm sparse clouds
+    for (const cl of CLOUDS_WISP) {
+      cl.x = (cl.x + cl.sp) % 1.35;
+      drawCloud(CX,(cl.x-0.1)*W, cl.y*H, cl.s, cl.a*0.72, 255,205,155);
+    }
+    _t++; requestAnimationFrame(draw); return;
+  }
+
+  // Daytime
+  if (!SKY.isOvercast) {
+    // Clear sky — soft diffuse glow, no disc
+    const sg = CX.createRadialGradient(W*0.72,H*0.14,0,W*0.72,H*0.14,W*0.38);
+    sg.addColorStop(0,   'rgba(255,248,210,0.28)');
+    sg.addColorStop(0.45,'rgba(200,235,255,0.10)');
+    sg.addColorStop(1,   'rgba(200,235,255,0)');
+    CX.fillStyle = sg; CX.fillRect(0,0,W,H);
+    for (const cl of CLOUDS_WISP) {
+      cl.x = (cl.x + cl.sp) % 1.35;
+      drawCloud(CX,(cl.x-0.1)*W, cl.y*H, cl.s, cl.a*0.62, 255,255,255);
+    }
+  } else {
+    // Overcast — diffuse behind clouds
+    const sg = CX.createRadialGradient(W*0.55,H*0.18,0,W*0.55,H*0.18,W*0.44);
+    sg.addColorStop(0,  'rgba(240,246,255,0.26)');
+    sg.addColorStop(1,  'rgba(240,246,255,0)');
+    CX.fillStyle = sg; CX.fillRect(0,0,W,H);
+    for (const cl of CLOUDS_BIG) {
+      cl.x = (cl.x + cl.sp) % 1.42;
+      drawCloud(CX,(cl.x-0.15)*W, cl.y*H, cl.s, cl.a, 238,244,252);
+    }
+  }
+
+  _t++; requestAnimationFrame(draw);
 }
 requestAnimationFrame(draw);
+
+// ── Time phase (Tirupati District: sunrise ~6:00, sunset ~18:10) ────
+function getSkyPhase() {
+  const now = new Date();
+  const hm  = now.getHours() + now.getMinutes()/60;
+  const rise = 6.0, set = 18.25;
+  if (hm < rise)            return 'night';
+  if (hm < rise + 2.5)      return 'morning';
+  if (hm < set  - 2.5)      return 'day';
+  if (hm < set)             return 'evening';
+  return 'night';
+}
+function refreshPhase() { SKY.phase = getSkyPhase(); }
+refreshPhase();
+setInterval(refreshPhase, 60000);
+
+// ── Weather fetch (Open-Meteo, no key needed) ─────────────────
+async function fetchWeather(lat, lon) {
+  try {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=cloudcover,weathercode&timezone=auto`;
+    const res  = await fetch(url);
+    const data = await res.json();
+    const cloud = data.current.cloudcover;
+    const wcode = data.current.weathercode;
+    SKY.isOvercast = cloud > 60 || (wcode >= 2 && wcode <= 99);
+  } catch(e) {
+    SKY.isOvercast = false;
+  }
+}
+fetchWeather(SKY.lat, SKY.lon);
+// Re-fetch every 15 minutes
+setInterval(() => fetchWeather(SKY.lat, SKY.lon), 15 * 60 * 1000);
 
 
 // ─── FEATURES TREE ────────────────────────────────────────────
